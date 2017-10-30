@@ -1,0 +1,18 @@
+cache:
+  directories: "$HOME/Library/Caches/Homebrew"
+
+language: generic
+
+matrix:
+  include:
+    - os: osx
+      osx_image: xcode6.4
+    - os: osx
+      osx_image: xcode7.3
+    - os: osx
+      osx_image: xcode8.3
+
+before_install: brew update
+
+install:
+  - brew test-bot --ci-auto ./Formula/*.rb
