@@ -1,6 +1,3 @@
-# This file allows you to install the command-line `touist` through
-# homebrew/linuxbrew. To install from brew (fill the <path>):
-#     brew install https://<path>/touist.rb
 class Touist < Formula
   desc "The solver for the TouIST language"
   homepage "https://www.irit.fr/touist"
@@ -28,7 +25,7 @@ class Touist < Formula
     # If CC is set to CC=clang during `opam install qbf`,
     # then the ./configure of  libs/quantor-3.2 won't not work
     # because it (seemingly) expects CC to be 'cc*' or 'gcc*'.
-    ENV["CC"] = "gcc" if ENV["CC"] == "clang"
+    ENV["CC"] = "" if ENV["CC"] == "clang"
     system "opam", "install", "yices2", "qbf"
 
     # Install the mandatory opam dependencies
