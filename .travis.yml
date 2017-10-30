@@ -40,7 +40,7 @@ before_install:
   - ulimit -n 1024
 
 script:
-  - brew tap touist/touist
+  - brew tap davidchall/test-bot
   - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
       brew test-bot --ci-testing;
     else
