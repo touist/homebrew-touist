@@ -34,11 +34,12 @@ before_install:
   - rm -rf "$HOMEBREW_TAP_DIR"
   - ln -s "$PWD" "$HOMEBREW_TAP_DIR"
   - export HOMEBREW_DEVELOPER="1"
+
   - export HOMEBREW_BINTRAY_USER="maelvalais"
   - export TAP_BOTTLE_DOMAIN="https://dl.bintray.com/touist"
   - ulimit -n 1024
 
-install:
+script:
   - brew tap touist/touist
   - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
       brew test-bot --ci-testing;
