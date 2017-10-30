@@ -1,18 +1,52 @@
+# Inspired from the .travis.yml in
+# https://github.com/davidchall/homebrew-hep/
+
+language: ruby
+rvm: system
+
 cache:
-  directories: "$HOME/Library/Caches/Homebrew"
+  directories:
+    - "$HOME/Library/Caches/Homebrew"
+    - "$HOME/.gem/ruby"
 
-language: generic
-
+# https://docs.travis-ci.com/user/reference/osx/#OS-X-Version
+os: osx
 matrix:
   include:
-    - os: osx
-      osx_image: xcode6.4
-    - os: osx
-      osx_image: xcode7.3
-    - os: osx
-      osx_image: xcode8.3
+    - osx_image: xcode9.1
+      env: OSX=10.12
+    - osx_image: xcode8
+      env: OSX=10.11
+    - osx_image: xcode6.4
+      env: OSX=10.10
 
-before_install: brew update
+before_install:
+  - export TRAVIS_COMMIT="$(git rev-parse --verify -q HEAD)"
+  - if [ -f ".git/shallow" ]; then
+      travis_retry git fetch --unshallow;
+    fi
+  - HOMEBREW_REPOSITORY="$(brew --repo)"
+  - sudo chown -R "$USER" "$HOMEBREW_REPOSITORY"
+  - git -C "$HOMEBREW_REPOSITORY" reset --hard origin/master
+  - brew update || brew update
+  - HOMEBREW_TAP_DIR="$(brew --repo "$TRAVIS_REPO_SLUG")"
+  - mkdir -p "$HOMEBREW_TAP_DIR"
+  - rm -rf "$HOMEBREW_TAP_DIR"
+  - ln -s "$PWD" "$HOMEBREW_TAP_DIR"
+  - export HOMEBREW_DEVELOPER="1"
+  - export HOMEBREW_BINTRAY_USER="maelvalais"
+  - export TAP_BOTTLE_DOMAIN="https://dl.bintray.com/touist"
+  - ulimit -n 1024
 
 install:
-  - brew test-bot --ci-auto ./Formula/*.rb
+  - brew tap touist/touist
+  - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
+      brew test-bot --ci-testing;
+    else
+      brew test-bot --ci-pr;
+    fi
+
+after_success:
+  - if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
+      brew test-bot --ci-upload --git-name="Maël Valais" --git-email=mael.valais@gmail.com --bintray-org=touist;
+    fi
