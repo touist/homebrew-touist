@@ -52,6 +52,8 @@ script:
 after_success:
   - if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
       brew update;
-      brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist;
+      brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --verbose;
+      which git;
+      echo git -C "$HOMEBREW_REPOSITORY" push;
       git -C "$HOMEBREW_REPOSITORY" push;
     fi

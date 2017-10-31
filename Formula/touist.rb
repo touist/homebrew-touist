@@ -7,7 +7,6 @@ class Touist < Formula
   # We use the git history for `git describe --tags`, so no shallow clone
 
 
-  # force
   bottle do
   end
 
