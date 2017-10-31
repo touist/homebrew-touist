@@ -53,4 +53,5 @@ after_success:
   - if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
       brew update;
       brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist;
+      git push;
     fi
