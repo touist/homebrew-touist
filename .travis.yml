@@ -34,6 +34,9 @@ before_install:
   - rm -rf "$HOMEBREW_TAP_DIR"
   - ln -s "$PWD" "$HOMEBREW_TAP_DIR"
   - export HOMEBREW_DEVELOPER="1"
+  - if test "$TRAVIS_PULL_REQUEST" != "false"; then
+      export UPSTREAM_PULL_REQUEST=$TRAVIS_PULL_REQUEST;
+    fi
 
   - export HOMEBREW_BINTRAY_USER="maelvalais"
   - export TAP_BOTTLE_DOMAIN="https://dl.bintray.com/touist"
