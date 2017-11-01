@@ -6,7 +6,7 @@ rvm: system
 
 cache:
   directories:
-    - "$HOME/Library/Caches/Homebrew"
+#    - "$HOME/Library/Caches/Homebrew"
     - "$HOME/.gem/ruby"
 
 # https://docs.travis-ci.com/user/reference/osx/#OS-X-Version
@@ -15,10 +15,10 @@ matrix:
   include:
     - osx_image: xcode9.1
       env: OSX=10.12
-    - osx_image: xcode8
-      env: OSX=10.11
-    - osx_image: xcode6.4
-      env: OSX=10.10
+#    - osx_image: xcode8
+#      env: OSX=10.11
+#    - osx_image: xcode6.4
+#      env: OSX=10.10
 
 before_install:
   - export TRAVIS_COMMIT="$(git rev-parse --verify -q HEAD)"
@@ -49,11 +49,6 @@ script:
       brew test-bot --ci-pr;
     fi
 
+# --tap=touist/touist is not necessary because we already set HOMEBREW_TAP_DIR
 after_success:
-  - if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
-      brew update;
-      brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --verbose;
-      which git;
-      echo git -C "$HOMEBREW_REPOSITORY" push;
-      git -C "$HOMEBREW_REPOSITORY" push;
-    fi
+  - brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist;
