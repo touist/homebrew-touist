@@ -2,25 +2,16 @@
 # https://github.com/davidchall/homebrew-hep/
 
 language: ruby
-rvm: system
+rvm: 2.3
 
 cache:
   directories:
-#    - "$HOME/Library/Caches/Homebrew"
+    - "$HOME/Library/Caches/Homebrew"
+    - "$HOME/.cache/Homebrew"
+    - "$HOME/.cache/pip"
     - "$HOME/.gem/ruby"
 
-# https://docs.travis-ci.com/user/reference/osx/#OS-X-Version
-os: osx
-matrix:
-  include:
-    - osx_image: xcode9.1
-      env: OSX=10.12
-#    - osx_image: xcode8
-#      env: OSX=10.11
-#    - osx_image: xcode6.4
-#      env: OSX=10.10
-
-before_install:
+install:
   - export TRAVIS_COMMIT="$(git rev-parse --verify -q HEAD)"
   - if [ -f ".git/shallow" ]; then
       travis_retry git fetch --unshallow;
@@ -42,22 +33,57 @@ before_install:
   - export TAP_BOTTLE_DOMAIN="https://dl.bintray.com/touist"
   - ulimit -n 1024
 
-script:
   # the official test-bot won't let you run inside TravisCI, so we use
-  # davidchall's one
+  # davidchall's one. David's test-bot cannot push the commit using
+  # Oauth github + https (only ssh) so I use my own.
   - brew tap maelvalais/test-bot
+
+  - aws s3 sync s3://homebrew-touist-travis/shared ~/shared
+
+script:
   - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
-      brew test-bot --ci-testing --dry-run;
       brew test-bot --ci-testing;
     else
-      brew test-bot --ci-pr --dry-run;
       brew test-bot --ci-pr;
     fi
+  - mv *.bottle*.* ~/shared 2>/dev/null || echo "==> No bottle created here"
+
+jobs:
+  include:
+  # https://docs.travis-ci.com/user/reference/osx/#OS-X-Version
+    - os: linux
+      env: OS=x86_64_linux
+      before_install:
+        - yes '' | sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+        - export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
+        - export PATH="$HOME/.local/bin:$PATH" # for `aws` (awscli)
+        - pip install --user awscli
+#    - os: osx
+#      osx_image: xcode9.1
+#      env: OS=high_sierra
+#    - os: osx
+#      osx_image: xcode8
+#      env: OS=sierra
+#    - os: osx
+#      osx_image: xcode6.4
+#      env: OS=el_capitan
+    - stage: deploy
+      if: branch = master && type != pull_request
+      os: linux
+      before_install:
+        - yes '' | sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+        - export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
+        - export PATH="$HOME/.local/bin:$PATH" # for awscli
+        - pip install --user awscli
+      script:
+        - mv ~/shared/* .
+        - brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --verbose --dry-run
+        - brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --verbose
+      after_success:
+      # Clean the bucket
+        - aws s3 rm s3://homebrew-touist-travis --recursive
+      
 
 # --tap=touist/touist is not necessary because we already set HOMEBREW_TAP_DIR
 after_success:
-  - if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
-      brew update;
-      brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --verbose --dry-run;
-      brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --verbose;
-    fi
+  - aws s3 sync ~/shared s3://homebrew-touist-travis/shared
