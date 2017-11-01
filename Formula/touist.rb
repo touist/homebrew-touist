@@ -54,8 +54,8 @@ class Touist < Formula
       a and b
     EOS
     system("#{bin}/touist", "#{testpath}/test.touist", "--solve")
-    system("#{bin}/touist", "#{testpath}/test.touist", "--solve", "--smt", "QF_LIA")
-    system("#{bin}/touist", "#{testpath}/test.touist", "--solve", "--qbf")
+    #system("#{bin}/touist", "#{testpath}/test.touist", "--solve", "--smt", "QF_LIA")
+    #system("#{bin}/touist", "#{testpath}/test.touist", "--solve", "--qbf")
   end
 end
 
