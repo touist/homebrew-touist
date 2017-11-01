@@ -17,44 +17,21 @@ install:
   # if I don't do umask, the formula touist.rb is rw-rwr-- instead of rw-r--r--
   # after brew tap touist/touist
   # See https://github.com/cybertk/homebrew-gitlab-runner/pull/2
-  - umask 022
-  - brew tap touist/touist
-  - brew audit touist/touist/touist --online
-  - ls -al /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/touist/homebrew-touist/Formula/
-  - git -C /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/touist/homebrew-touist/ status
 
-  - export TRAVIS_COMMIT="$(git rev-parse --verify -q HEAD)"
-  - if [ -f ".git/shallow" ]; then
-      travis_retry git fetch --unshallow;
+  - if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
+      HOMEBREW_REPOSITORY="$(brew --repo)";
+      sudo chown -R "$USER" "$HOMEBREW_REPOSITORY";
+      git -C "$HOMEBREW_REPOSITORY" reset --hard origin/master;
+      brew update || brew update;
+      HOMEBREW_TAP_DIR="$(brew --repo "$TRAVIS_REPO_SLUG")";
+      mkdir -p "$HOMEBREW_TAP_DIR";
+      rm -rf "$HOMEBREW_TAP_DIR";
+      ln -s "$PWD" "$HOMEBREW_TAP_DIR";
+    else
+      umask 022;
     fi
-  - HOMEBREW_REPOSITORY="$(brew --repo)"
-  - ls -al /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/touist/homebrew-touist/Formula/;
-    git -C /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/touist/homebrew-touist/ status
-  
-  - sudo chown -R "$USER" "$HOMEBREW_REPOSITORY"
-
-  - ls -al /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/touist/homebrew-touist/Formula/;
-    git -C /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/touist/homebrew-touist/ status
-
-  - git -C "$HOMEBREW_REPOSITORY" reset --hard origin/master
-
-  - ls -al /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/touist/homebrew-touist/Formula/;
-    git -C /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/touist/homebrew-touist/ status
-
-  - brew update || brew update
-
-  - ls -al /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/touist/homebrew-touist/Formula/;
-    git -C /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/touist/homebrew-touist/ status
-
-  - HOMEBREW_TAP_DIR="$(brew --repo "$TRAVIS_REPO_SLUG")"
-  - mkdir -p "$HOMEBREW_TAP_DIR"
-  - rm -rf "$HOMEBREW_TAP_DIR"
-  - ln -s "$PWD" "$HOMEBREW_TAP_DIR"
+  - export TRAVIS_COMMIT="$(git rev-parse --verify -q HEAD)";
   - export HOMEBREW_DEVELOPER="1"
-  - if test "$TRAVIS_PULL_REQUEST" != "false"; then
-      export UPSTREAM_PULL_REQUEST=$TRAVIS_PULL_REQUEST;
-    fi
-
   - export HOMEBREW_BINTRAY_USER="maelvalais"
   - export TAP_BOTTLE_DOMAIN="https://dl.bintray.com/touist"
   - ulimit -n 1024
@@ -92,6 +69,7 @@ jobs:
     - stage: deploy
       if: branch = master && type != pull_request
       os: linux
+      env: OS=any_linux
       before_install:
         - yes '' | sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
         - export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
