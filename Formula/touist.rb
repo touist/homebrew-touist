@@ -9,6 +9,7 @@ class Touist < Formula
   #f
   # force a change
   # azdaz
+  # force
   bottle do
   end
 
@@ -58,4 +59,3 @@ class Touist < Formula
     #system("#{bin}/touist", "#{testpath}/test.touist", "--solve", "--qbf")
   end
 end
-
