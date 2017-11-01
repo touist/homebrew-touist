@@ -20,6 +20,8 @@ install:
   - umask 022
   - brew tap touist/touist
   - brew audit touist/touist/touist --online
+  - ls -al /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/touist/homebrew-touist/Formula/
+  - git -C /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/touist/homebrew-touist/ status
 
   - export TRAVIS_COMMIT="$(git rev-parse --verify -q HEAD)"
   - if [ -f ".git/shallow" ]; then
@@ -50,6 +52,8 @@ install:
   - aws s3 sync s3://homebrew-touist-travis/shared ~/shared
 
 script:
+  - ls -al /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/touist/homebrew-touist/Formula/
+  - git -C /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/touist/homebrew-touist/ status
   - brew test-bot --ci-auto
   - mv *.bottle*.* ~/shared 2>/dev/null || echo "==> No bottle created here"
 
