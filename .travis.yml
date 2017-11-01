@@ -45,10 +45,12 @@ before_install:
 script:
   # the official test-bot won't let you run inside TravisCI, so we use
   # davidchall's one
-  - brew tap davidchall/test-bot
+  - brew tap maelvalais/test-bot
   - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
+      brew test-bot --ci-testing --dry-run;
       brew test-bot --ci-testing;
     else
+      brew test-bot --ci-pr --dry-run;
       brew test-bot --ci-pr;
     fi
 
@@ -56,5 +58,6 @@ script:
 after_success:
   - if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
       brew update;
-      brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --verbose
+      brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --verbose --dry-run;
+      brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --verbose;
     fi

@@ -28,7 +28,8 @@ class Touist < Formula
     # then the ./configure of  libs/quantor-3.2 won't not work
     # because it (seemingly) expects CC to be 'cc*' or 'gcc*'.
     ENV["CC"] = "" if ENV["CC"] == "clang"
-    system "opam", "install", "yices2", "qbf"
+
+    #system "opam", "install", "yices2", "qbf"
 
     # Install the mandatory opam dependencies
     system "opam", "pin", "add", ".", "--no-action"
@@ -37,7 +38,8 @@ class Touist < Formula
     # configure touist
     system "opam", "config", "exec", "--",
            "ocaml", "setup.ml", "-configure",
-           "--enable-yices2", "--enable-qbf", "--disable-lib",
+           #"--enable-yices2", "--enable-qbf",
+           "--disable-lib",
            "--prefix", prefix, "--mandir", man
 
     system "opam", "config", "exec", "--",
