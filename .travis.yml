@@ -54,4 +54,7 @@ script:
 
 # --tap=touist/touist is not necessary because we already set HOMEBREW_TAP_DIR
 after_success:
-  - brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist;
+  - if [ "$TRAVIS_PULL_REQUEST" = "false" ] && [ "$TRAVIS_BRANCH" = "master" ]; then
+      brew update;
+      brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --verbose
+    fi
