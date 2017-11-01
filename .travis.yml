@@ -6,7 +6,9 @@ rvm: 2.3
 
 cache:
   directories:
-    - "$HOME/Library/Caches/Homebrew"
+# "$HOME/Library/Caches/Homebrew" seems to be used in linux
+# also and poses the permissions problem below.
+#    - "$HOME/Library/Caches/Homebrew"
     - "$HOME/.cache/Homebrew"
     - "$HOME/.cache/pip"
     - "$HOME/.gem/ruby"
@@ -45,11 +47,7 @@ install:
   - aws s3 sync s3://homebrew-touist-travis/shared ~/shared
 
 script:
-  - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
-      brew test-bot --ci-testing;
-    else
-      brew test-bot --ci-pr;
-    fi
+  - brew test-bot --ci-auto
   - mv *.bottle*.* ~/shared 2>/dev/null || echo "==> No bottle created here"
 
 jobs:
