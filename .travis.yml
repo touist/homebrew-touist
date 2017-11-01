@@ -28,9 +28,24 @@ install:
       travis_retry git fetch --unshallow;
     fi
   - HOMEBREW_REPOSITORY="$(brew --repo)"
+  - ls -al /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/touist/homebrew-touist/Formula/;
+    git -C /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/touist/homebrew-touist/ status
+  
   - sudo chown -R "$USER" "$HOMEBREW_REPOSITORY"
+
+  - ls -al /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/touist/homebrew-touist/Formula/;
+    git -C /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/touist/homebrew-touist/ status
+
   - git -C "$HOMEBREW_REPOSITORY" reset --hard origin/master
+
+  - ls -al /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/touist/homebrew-touist/Formula/;
+    git -C /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/touist/homebrew-touist/ status
+
   - brew update || brew update
+
+  - ls -al /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/touist/homebrew-touist/Formula/;
+    git -C /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/touist/homebrew-touist/ status
+
   - HOMEBREW_TAP_DIR="$(brew --repo "$TRAVIS_REPO_SLUG")"
   - mkdir -p "$HOMEBREW_TAP_DIR"
   - rm -rf "$HOMEBREW_TAP_DIR"
@@ -52,8 +67,6 @@ install:
   - aws s3 sync s3://homebrew-touist-travis/shared ~/shared
 
 script:
-  - ls -al /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/touist/homebrew-touist/Formula/
-  - git -C /home/linuxbrew/.linuxbrew/Homebrew/Library/Taps/touist/homebrew-touist/ status
   - brew test-bot --ci-auto
   - mv *.bottle*.* ~/shared 2>/dev/null || echo "==> No bottle created here"
 
