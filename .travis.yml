@@ -80,10 +80,9 @@ jobs:
         - brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --verbose --dry-run
         - brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --verbose
       after_success:
-      # Clean the bucket
+        # Clean the bucket
         - aws s3 rm s3://homebrew-touist-travis --recursive
       
-
 # --tap=touist/touist is not necessary because we already set HOMEBREW_TAP_DIR
 after_success:
   - aws s3 sync ~/shared s3://homebrew-touist-travis/shared
