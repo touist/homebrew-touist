@@ -6,22 +6,6 @@ class Touist < Formula
   head "https://github.com/touist/touist.git", :shallow => false
   # We use the git history for `git describe --tags`, so no shallow clone
 
-  #f
-  # force a change
-  # azdaz
-  # force
-  # adazd
-  #
-  #force
-  #
-  #
-  #
-  #
-  #
-  #
-  #
-  #
-  # force
   bottle do
   end
 
@@ -53,7 +37,7 @@ class Touist < Formula
     # configure touist
     system "opam", "config", "exec", "--",
            "ocaml", "setup.ml", "-configure",
-           #"--enable-yices2", "--enable-qbf",
+           "--enable-yices2", "--enable-qbf",
            "--disable-lib",
            "--prefix", prefix, "--mandir", man
 
@@ -67,7 +51,7 @@ class Touist < Formula
       a and b
     EOS
     system("#{bin}/touist", "#{testpath}/test.touist", "--solve")
-    #system("#{bin}/touist", "#{testpath}/test.touist", "--solve", "--smt", "QF_LIA")
-    #system("#{bin}/touist", "#{testpath}/test.touist", "--solve", "--qbf")
+    system("#{bin}/touist", "#{testpath}/test.touist", "--solve", "--smt", "QF_LIA")
+    system("#{bin}/touist", "#{testpath}/test.touist", "--solve", "--qbf")
   end
 end
