@@ -3,6 +3,7 @@
 
 language: ruby
 rvm: 2.3
+if: tag IS blank
 
 cache:
   directories:
@@ -17,11 +18,7 @@ cache:
 # after brew tap touist/touist
 # See https://github.com/cybertk/homebrew-gitlab-runner/pull/2
 install:
-  - export TRAVIS_COMMIT="$(git rev-parse --verify -q HEAD)";
-  # This step will make sure aws, brew are installed and
-  # that we are in a folder symlinked (in one way or the other)
-  # to $(brew --repo "$TRAVIS_REPO_SLUG"). If we don't do that,
-  # the git push won't work.
+  - export TRAVIS_COMMIT="$(git rev-parse --verify -q HEAD)"
   - |
     if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
       HOMEBREW_REPOSITORY="$(brew --repo)";
@@ -35,15 +32,15 @@ install:
     else
       # Fix the permission problem on linux (664 instead of 644)
       umask 022;
-      yes '' | sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)";
+      # Instal linuxbrew
       export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH";
-      export PATH="$HOME/.local/bin:$PATH"; # for `aws` (awscli)
-      pip install --user awscli;
+      yes '' | sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)";
       # Fix a `brew doctor` error on "config" scripts
       sudo rm -f /home/travis/.phpenv/shims/php-config;
       sudo rm -f /opt/pyenv/shims/*-config;
       sudo rm -f /usr/local/clang-3.9.0/bin/llvm-config;
     fi
+  - brew install awscli
   - export UPSTREAM_BOTTLE_KEEP_OLD=true
   - export HOMEBREW_DEVELOPER="1"
   - export HOMEBREW_BINTRAY_USER="maelvalais"
