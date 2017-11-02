@@ -82,10 +82,10 @@ jobs:
       script:
         # For --ci-upload, we MUST be in the folder of the tap,
         # not in ~/build/<slug>
-        - HOMEBREW_TAP_DIR="$(brew --repo $TRAVIS_REPO_SLUG)";
-        - mkdir -p "$HOMEBREW_TAP_DIR";
-        - cd "$HOMEBREW_TAP_DIR";
-        - if cp ~/shared/* . ; then
+        - brew tap touist/touist;
+        - cd "$(brew --repo $TRAVIS_REPO_SLUG)";
+        - git fetch --unshallow
+        - if cp -v ~/shared/* . ; then
             brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --verbose;
           else
             echo "==> No bottle downloaded, cannot run --ci-upload";
