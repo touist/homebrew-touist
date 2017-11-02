@@ -17,17 +17,23 @@ cache:
 # after brew tap touist/touist
 # See https://github.com/cybertk/homebrew-gitlab-runner/pull/2
 install:
+  - export TRAVIS_COMMIT="$(git rev-parse --verify -q HEAD)";
+  # This step will make sure aws, brew are installed and
+  # that we are in a folder symlinked (in one way or the other)
+  # to $(brew --repo "$TRAVIS_REPO_SLUG"). If we don't do that,
+  # the git push won't work.
   - |
     if [ "${TRAVIS_OS_NAME}" = "osx" ]; then
       HOMEBREW_REPOSITORY="$(brew --repo)";
       sudo chown -R "$USER" "$HOMEBREW_REPOSITORY";
       git -C "$HOMEBREW_REPOSITORY" reset --hard origin/master;
       brew update || brew update;
-      HOMEBREW_TAP_DIR="$(brew --repo "$TRAVIS_REPO_SLUG")";
+      HOMEBREW_TAP_DIR="$(brew --repo $TRAVIS_REPO_SLUG)";
       mkdir -p "$HOMEBREW_TAP_DIR";
       rm -rf "$HOMEBREW_TAP_DIR";
       ln -s "$PWD" "$HOMEBREW_TAP_DIR";
     else
+      # Fix the permission problem on linux (664 instead of 644)
       umask 022;
       yes '' | sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)";
       export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH";
@@ -37,9 +43,11 @@ install:
       sudo rm -f /home/travis/.phpenv/shims/php-config;
       sudo rm -f /opt/pyenv/shims/*-config;
       sudo rm -f /usr/local/clang-3.9.0/bin/llvm-config;
+      HOMEBREW_TAP_DIR="$(brew --repo $TRAVIS_REPO_SLUG)";
+      mkdir -p "$HOMEBREW_TAP_DIR";
+      cd "$HOMEBREW_TAP_DIR";
     fi
   - export UPSTREAM_BOTTLE_KEEP_OLD=true
-  - export TRAVIS_COMMIT="$(git rev-parse --verify -q HEAD)";
   - export HOMEBREW_DEVELOPER="1"
   - export HOMEBREW_BINTRAY_USER="maelvalais"
   - export TAP_BOTTLE_DOMAIN="https://dl.bintray.com/touist"
@@ -54,7 +62,7 @@ install:
 
 script:
   - brew test-bot
-  - mv *.bottle*.* ~/shared 2>/dev/null || echo "==> No bottle created here"
+  - cp *.bottle*.* ~/shared 2>/dev/null || echo "==> No bottle created here"
 
 jobs:
   include:
@@ -75,7 +83,7 @@ jobs:
       os: linux
       env: OS=any_linux
       script:
-        - mv ~/shared/* . || echo "==> No bottle downloaded"
+        - cp ~/shared/* . || echo "==> No bottle downloaded"
         - brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --verbose
       after_success:
         # Clean the bucket
