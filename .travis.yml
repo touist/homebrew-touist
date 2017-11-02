@@ -38,7 +38,7 @@ install:
       sudo rm -f /opt/pyenv/shims/*-config;
       sudo rm -f /usr/local/clang-3.9.0/bin/llvm-config;
     fi
-
+  - export UPSTREAM_BOTTLE_KEEP_OLD=true
   - export TRAVIS_COMMIT="$(git rev-parse --verify -q HEAD)";
   - export HOMEBREW_DEVELOPER="1"
   - export HOMEBREW_BINTRAY_USER="maelvalais"
