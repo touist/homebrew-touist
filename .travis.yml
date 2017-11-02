@@ -84,7 +84,7 @@ jobs:
         # not in ~/build/<slug>
         - brew tap touist/touist;
         - cd "$(brew --repo $TRAVIS_REPO_SLUG)";
-        - git fetch --unshallow
+        - git fetch --unshallow || true
         - if cp -v ~/shared/* . ; then
             brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --verbose;
           else
