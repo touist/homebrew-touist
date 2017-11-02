@@ -50,7 +50,7 @@ install:
   # Oauth github + https (only ssh) so I use my own.
   - brew tap maelvalais/test-bot
 
-  - aws s3 sync s3://homebrew-touist-travis/shared ~/shared
+  - aws s3 sync s3://homebrew-touist-travis/${TRAVIS_BUILD_NUMBER} ~/shared
 
 script:
   - brew test-bot
@@ -76,12 +76,11 @@ jobs:
       env: OS=any_linux
       script:
         - mv ~/shared/* . || echo "==> No bottle downloaded"
-        - brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --verbose --dry-run
         - brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --verbose
       after_success:
         # Clean the bucket
-        - aws s3 rm s3://homebrew-touist-travis --recursive
+        #- aws s3 rm s3://homebrew-touist-travis/${TRAVIS_BUILD_NUMBER} --recursive
       
 # --tap=touist/touist is not necessary because we already set HOMEBREW_TAP_DIR
 after_success:
-  - aws s3 sync ~/shared s3://homebrew-touist-travis/shared
+  - aws s3 sync ~/shared s3://homebrew-touist-travis/${TRAVIS_BUILD_NUMBER}
