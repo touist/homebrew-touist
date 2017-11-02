@@ -23,6 +23,8 @@ class Touist < Formula
   #
   # force
   bottle do
+    root_url "https://dl.bintray.com/touist/bottles-touist"
+    sha256 "db82b49d448b761cd329a366c8bcf30b8ba4172471887dc169edba08d5f9abdb" => :x86_64_linux
   end
 
   depends_on "opam" => :build
