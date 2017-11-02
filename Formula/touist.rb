@@ -6,7 +6,6 @@ class Touist < Formula
   head "https://github.com/touist/touist.git", :shallow => false
   # We use the git history for `git describe --tags`, so no shallow clone
 
-  # Force
   bottle do
   end
 
@@ -29,7 +28,7 @@ class Touist < Formula
     # because it (seemingly) expects CC to be 'cc*' or 'gcc*'.
     ENV["CC"] = "" if ENV["CC"] == "clang"
 
-    #system "opam", "install", "yices2", "qbf"
+    system "opam", "install", "yices2", "qbf"
 
     # Install the mandatory opam dependencies
     system "opam", "pin", "add", ".", "--no-action"
