@@ -7,6 +7,11 @@ class Touist < Formula
   # We use the git history for `git describe --tags`, so no shallow clone
 
   bottle do
+    root_url "https://dl.bintray.com/touist/bottles-touist"
+    prefix "/usr/local"
+    cellar :any_skip_relocation
+    sha256 "64744901805e2e5271212aae90d0cc6eb8a199251bd4e681e921f3f5227f586c" => :sierra
+    sha256 "c96d9245c95ac225cef2af2bee1eb7a13f2486ba1683a42379b818af45c15948" => :x86_64_linux
   end
 
   depends_on "opam" => :build
