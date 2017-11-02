@@ -8,7 +8,7 @@ cache:
   directories:
 # "$HOME/Library/Caches/Homebrew" seems to be used in linux
 # also and poses the permissions problem below.
-#    - "$HOME/Library/Caches/Homebrew"
+    - "$HOME/Library/Caches/Homebrew"
     - "$HOME/.cache/Homebrew"
     - "$HOME/.cache/pip"
     - "$HOME/.gem/ruby"
@@ -33,7 +33,12 @@ install:
       export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH";
       export PATH="$HOME/.local/bin:$PATH"; # for `aws` (awscli)
       pip install --user awscli;
+      # Fix a `brew doctor` error on "config" scripts
+      rm -f /home/travis/.phpenv/shims/php-config
+      rm -f /opt/pyenv/shims/*-config
+      rm -f /usr/local/clang-3.9.0/bin/llvm-config
     fi
+
   - export TRAVIS_COMMIT="$(git rev-parse --verify -q HEAD)";
   - export HOMEBREW_DEVELOPER="1"
   - export HOMEBREW_BINTRAY_USER="maelvalais"
