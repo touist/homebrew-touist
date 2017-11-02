@@ -76,7 +76,7 @@ jobs:
 #      osx_image: xcode6.4
 #      env: OS=el_capitan
     - stage: deploy
-      if: branch = master && type != pull_request
+      if: branch = master && type != pull_request && type != tag
       os: linux
       env: OS=any_linux
       script:
