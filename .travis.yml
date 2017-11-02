@@ -43,9 +43,6 @@ install:
       sudo rm -f /home/travis/.phpenv/shims/php-config;
       sudo rm -f /opt/pyenv/shims/*-config;
       sudo rm -f /usr/local/clang-3.9.0/bin/llvm-config;
-      HOMEBREW_TAP_DIR="$(brew --repo $TRAVIS_REPO_SLUG)";
-      mkdir -p "$HOMEBREW_TAP_DIR";
-      cd "$HOMEBREW_TAP_DIR";
     fi
   - export UPSTREAM_BOTTLE_KEEP_OLD=true
   - export HOMEBREW_DEVELOPER="1"
@@ -83,6 +80,11 @@ jobs:
       os: linux
       env: OS=any_linux
       script:
+        # For --ci-upload, we MUST be in the folder of the tap,
+        # not in ~/build/<slug>
+        - HOMEBREW_TAP_DIR="$(brew --repo $TRAVIS_REPO_SLUG)";
+        - mkdir -p "$HOMEBREW_TAP_DIR";
+        - cd "$HOMEBREW_TAP_DIR";
         - if cp ~/shared/* . ; then
             brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --verbose;
           else
