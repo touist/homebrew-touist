@@ -83,8 +83,11 @@ jobs:
       os: linux
       env: OS=any_linux
       script:
-        - cp ~/shared/* . || echo "==> No bottle downloaded"
-        - brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --verbose
+        - if cp ~/shared/* . ; then
+            brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --verbose;
+          else
+            echo "==> No bottle downloaded, cannot run --ci-upload";
+          fi
       after_success:
         # Clean the bucket
         #- aws s3 rm s3://homebrew-touist-travis/${TRAVIS_BUILD_NUMBER} --recursive
