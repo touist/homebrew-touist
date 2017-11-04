@@ -1,0 +1,109 @@
+# Inspired from the .travis.yml in
+# https://github.com/davidchall/homebrew-hep/
+
+language: ruby
+if: tag IS blank
+env:
+  global:
+    - HOMEBREW_BINTRAY_USER=maelvalais
+    - TAP_BOTTLE_DOMAIN=https://dl.bintray.com/touist
+
+# Note: I removed $HOME/Library/Caches/Homebrew from the caches
+# because it was enormous (~2GB for the 4 jobs). This is because
+# this folder is already present on osx images and it is big.
+# The linuxbrew one isn't as big because it is created from scratch.
+cache:
+  directories:
+    - "$HOME/.cache/Homebrew" # cache of Linuxbrew
+    - "$HOME/.cache/pip"
+    - "$HOME/.gem/ruby"
+
+install:
+  # the official test-bot won't let you run inside TravisCI, so we use
+  # davidchall's one. David's test-bot cannot push the commit using
+  # Oauth github + https (only ssh) so I use my own.
+  - brew tap maelvalais/test-bot
+  - brew install awscli
+  - aws s3 sync s3://homebrew-touist-travis/${TRAVIS_BUILD_NUMBER} ~/shared
+
+script:
+  # Note on HOMEBREW_DEVELOPER: I don't want to put in env.global because
+  # it should be '1' only during test-bot. If it is '1' during
+  # brew cask uninstall... it will fail on the deprecation notice.
+  # Unless I am in 'brew test-bot', I don't want to fail on warnings.
+  # Also, 'brew doctor' must be run under HOMEBREW_DEVELOPER=1. Otherwise,
+  # it returns 1 with the message "this osx version is outdated" on old osx ver.
+  - export HOMEBREW_DEVELOPER=1
+  - brew doctor # needs HOMEBREW_DEVELOPER because of outdated osx returning 1
+  - brew test-bot
+  - cp *.bottle*.* ~/shared 2>/dev/null || echo "==> No bottle created here"
+
+# https://docs.travis-ci.com/user/reference/osx/#OS-X-Version
+jobs:
+  include:
+    - os: osx
+      osx_image: xcode8.3
+      env: OS=sierra-10.12
+      rvm: system
+
+    - &run-on-osx-old-xcode # only for xcode6.4 and xcode7.3
+      os: osx
+      osx_image: xcode7.3
+      env: OS=el_capitan-10.11
+      rvm: system
+      before_install: # IMPORTANT: HOMEBREW_DEVELOPER must not be set here.
+        # Sometimes, brew update fails with the error 'Homebrew must be run
+        # under Ruby 2.3! You're running 2.0.0 (althouth ruby-portable is there).
+        # Workaround: double brew update: https://github.com/Homebrew/brew/issues/3299
+        - brew update | grep "==>" || brew update
+        # (brew doctor) fix the many missing deps on gnupg and others
+        - brew missing | cut -d':' -f1 | xargs brew uninstall
+        # (brew doctor) fix broken symlinks (oclint and cloog)
+        - brew prune
+        # (brew doctor) fix "your XQuartz (2.7.9) is outdated" if it is installed
+        - brew cask uninstall xquartz || true
+        # (brew test-bot on travis) fix libyaml 0.1.6_1 already installed
+        - brew uninstall libyaml || true; brew uninstall md5deep || true
+
+#    - <<: *run-on-osx-old-xcode
+#      os: osx
+#      osx_image: xcode6.4
+#      env: OS=yosemite-10.10
+#      rvm: system
+
+    - &run-on-linux
+      os: linux
+      env: OS=x86_64_linux
+      rvm: 2.3
+      before_install:
+        # Instal linuxbrew
+        - export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH";
+        - yes '' | sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)";
+        # Fix a `brew doctor` error on "config" scripts for some reason
+        - sudo rm -f /home/travis/.phpenv/shims/php-config
+          /opt/pyenv/shims/*-config /usr/local/clang-3.9.0/bin/llvm-config
+      before_cache:
+        - brew cleanup
+
+    - <<: *run-on-linux
+      stage: deploy
+      if: branch = master && type != pull_request
+      os: linux
+      rvm: 2.3
+      env: OS=any_linux
+      script:
+        # For --ci-upload, we MUST be in the folder of the tap, not in ~/build/
+        - brew tap touist/touist;
+        - cd "$(brew --repo $TRAVIS_REPO_SLUG)";
+        - git fetch --unshallow || true
+        - if cp -v ~/shared/* . ; then
+            brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --keep-old --verbose;
+          else
+            echo "==> No bottle downloaded, cannot run --ci-upload";
+          fi
+      after_success:
+        # Clean the bucket
+        #- aws s3 rm s3://homebrew-touist-travis/${TRAVIS_BUILD_NUMBER} --recursive
+
+after_success:
+  - aws s3 sync ~/shared s3://homebrew-touist-travis/${TRAVIS_BUILD_NUMBER}
