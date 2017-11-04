@@ -5,3 +5,7 @@ are built automatically by [![Build Status](https://travis-ci.org/touist/homebre
 To install `touist`:
 
     brew install touist/touist/touist
+
+To push a new release:
+
+    brew bump-formula-pr touist/touist/touist               --url=https://github.com/touist/touist/archive/v3.4.1.tar.gz
