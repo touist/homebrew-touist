@@ -87,7 +87,7 @@ jobs:
 
     - <<: *run-on-linux
       stage: deploy
-      if: branch = master && type != pull_request
+      if: branch = master and type != pull_request
       os: linux
       rvm: 2.3
       env: OS=any_linux
