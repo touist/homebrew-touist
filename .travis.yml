@@ -90,8 +90,16 @@ jobs:
       env: OS=x86_64_linux
       rvm: 2.3
       before_install:
-        # Fix the permission problem on linux (664 instead of 644)
-        - umask 022;
+        # Fix the permission problem on linux (664 instead of 644) during
+        # git clone (the one done by travis-ci). Homebrew needs formulas to be
+        # 'chmod 644'. This is because git does not conserve permissions and
+        # travis-ci seems to have by default a umask too permissive.
+        # Because we cannot do 'umask 002' just before travis clones the repo,
+        # I set umask afterwards (1) and I change the permission of
+        # already cloned files from 664 to 644 (2).
+        - umask 022                  # (1)
+        - chmod 0644 Formula/*.rb    # (2)
+
         # Instal linuxbrew
         - export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH";
         - yes '' | sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)";
