@@ -23,6 +23,20 @@ install:
   # davidchall's one. David's test-bot cannot push the commit using
   # Oauth github + https (only ssh) so I use my own.
   - brew tap maelvalais/test-bot
+
+  # IMPORTANT STEP: link the tap inside brew to our current travis-cloned tap
+  # Step: 1) create the intermediate folders <user>/<repo> so that
+  # we can 2) remove <repo> and 3) replace it with a sym link
+  # that will point to the travis build folder.
+  # If we don't do that, the tap be cloned using the default master
+  # branch, and thus we cannot test our tap at the current pushed commit.
+  # We also need to unshallow in 4) because sometimes travis does not
+  # clone thouroughly but we need a deep clone.
+  - mkdir -p $(brew --repo $TRAVIS_REPO_SLUG)   # 1)
+  - rm -rf $(brew --repo $TRAVIS_REPO_SLUG)     # 2)
+  - ln -s $PWD $(brew --repo $TRAVIS_REPO_SLUG) # 3)
+  - git fetch --unshallow || true               # 4)
+
   - brew install awscli
   - aws s3 sync s3://homebrew-touist-travis/${TRAVIS_BUILD_NUMBER} ~/shared || true
 
@@ -76,6 +90,8 @@ jobs:
       env: OS=x86_64_linux
       rvm: 2.3
       before_install:
+        # Fix the permission problem on linux (664 instead of 644)
+        - umask 022;
         # Instal linuxbrew
         - export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH";
         - yes '' | sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)";
@@ -87,15 +103,11 @@ jobs:
 
     - <<: *run-on-linux
       stage: deploy
-      if: branch = master and type != pull_request
+      if: branch = master AND type != pull_request
       os: linux
       rvm: 2.3
       env: OS=any_linux
       script:
-        # For --ci-upload, we MUST be in the folder of the tap, not in ~/build/
-        - brew tap touist/touist;
-        - cd "$(brew --repo $TRAVIS_REPO_SLUG)";
-        - git fetch --unshallow || true
         - if cp -v ~/shared/* . ; then
             brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --keep-old --verbose;
           else
