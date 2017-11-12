@@ -5,14 +5,12 @@ class Quantor < Formula
   sha256 "7a82ebfd1c8ecc250325f311e725f6263bf69b412edcc2b600db2a25937d1189"
 
   option "with-nanosat", "Build using nanosat instead of picosat"
-
   depends_on "picosat" => :build
-  depends_on "nanosat" => :build if build.with? "nanosat"
+  patch :DATA
 
   def install
     # Remove unrecognized options if warned by configure
-    system "./configure", "--nanosat=#{Formula["nanosat"].lib}" if build.with? "nanosat",
-                          "--picosat=#{Formula["picosat"].lib}" if !build.with? "nanosat"
+    system "./configure", "--picosat=#{Formula["picosat"].lib}"
     system "make"
     bin.install "quantor"
     lib.install "libquantor.a"
@@ -29,3 +27,24 @@ class Quantor < Formula
       shell_output("#{bin}/quantor #{testpath}/test.dimacs", result = 10).strip
   end
 end
+
+# From a95fd487721e5b6a73d4a5ac4416c55256ef1171 Mon Sep 17 00:00:00 2001
+# From: =?UTF-8?q?Ma=C3=ABl=20Valais?= <mael.valais@gmail.com>
+# Date: Sun, 12 Nov 2017 20:38:13 +0100
+# Subject: [PATCH 5/5] quantor-3.2: fix when CC is set to clang in macos
+__END__
+diff --git a/libs/quantor-3.2/configure b/libs/quantor-3.2/configure
+index 3fc1d50..17d6b46 100755
+--- a/configure
++++ b/configure
+@@ -223,7 +223,7 @@ RAWCC=unknown
+ for cc in $CC
+ do
+   case $cc in
+-    *gcc* | *cc*) RAWCC=$cc; break;;
++    *gcc* | *cc* | *clang*) RAWCC=$cc; break;;
+     *) ;;
+   esac
+ done
+--
+2.15.0
