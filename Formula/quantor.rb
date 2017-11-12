@@ -33,18 +33,16 @@ end
 # Date: Sun, 12 Nov 2017 20:38:13 +0100
 # Subject: [PATCH 5/5] quantor-3.2: fix when CC is set to clang in macos
 __END__
-diff --git a/libs/quantor-3.2/configure b/libs/quantor-3.2/configure
-index 3fc1d50..17d6b46 100755
+diff --git a/configure b/configure
+index 7634f70..bfc72b1 100755
 --- a/configure
 +++ b/configure
-@@ -223,7 +223,7 @@ RAWCC=unknown
- for cc in $CC
- do
+@@ -225,6 +225,7 @@ do
    case $cc in
--    *gcc* | *cc*) RAWCC=$cc; break;;
-+    *gcc* | *cc* | *clang*) RAWCC=$cc; break;;
+     gcc* | cc*) RAWCC=$cc; break;;
+     *gcc | *cc) RAWCC=$cc; break;;
++    *clang*) RAWCC=$cc; break;;
      *) ;;
    esac
  done
---
-2.15.0
+
