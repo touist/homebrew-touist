@@ -119,13 +119,13 @@ jobs:
         - if cp -v ~/shared/* . ; then
             brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --keep-old --verbose;
           else
-            echo "==> No bottle downloaded, cannot run --ci-upload";
+            echo "==> No bottle found in the bucket, skipping --ci-upload";
           fi
-      after_success:
+      after_script:
         # Clean the bucket
         #- aws s3 rm s3://homebrew-touist-travis/${TRAVIS_BUILD_NUMBER} --recursive
 
-after_success:
+after_script:
   # In case the AWS_SECRET_ACCESS_KEY and AWS_SECRET_ACCESS_KEY are not
   # available, we don't want the build to fail.
   - aws s3 sync ~/shared s3://homebrew-touist-travis/${TRAVIS_BUILD_NUMBER} || true
