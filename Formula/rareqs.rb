@@ -1,7 +1,3 @@
-# Documentation: https://docs.brew.sh/Formula-Cookbook.html
-#                http://www.rubydoc.info/github/Homebrew/brew/master/Formula
-# PLEASE REMOVE ALL GENERATED COMMENTS BEFORE SUBMITTING YOUR PULL REQUEST!
-
 class Rareqs < Formula
   desc "Recursive Abstraction Refinement QBF Solver"
   homepage "http://sat.inesc-id.pt/~mikolas/sw/areqs/"
@@ -55,14 +51,16 @@ end
 
 __END__
 diff --git a/Makefile b/Makefile
-index 0036f69..7213ea3 100644
+index 0036f69..82b0fe5 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -25,7 +25,7 @@ endif
+@@ -24,8 +24,8 @@ MSAT=libr
+ endif
  
  CFLAGS += -Wall
- CFLAGS+=-D __STDC_LIMIT_MACROS -D __STDC_FORMAT_MACROS -Wno-parentheses -Wno-deprecated -D _MSC_VER
+-CFLAGS+=-D __STDC_LIMIT_MACROS -D __STDC_FORMAT_MACROS -Wno-parentheses -Wno-deprecated -D _MSC_VER
 -CFLAGS+=-D _MSC_VER # this is just for compilation of Options in minisat, which are not used anyhow
++CFLAGS+=-D __STDC_LIMIT_MACROS -D __STDC_FORMAT_MACROS -Wno-parentheses -Wno-deprecated
 +#CFLAGS+=-D _MSC_VER # this is just for compilation of Options in minisat, which are not used anyhow
  CFLAGS+=-I./minisat/
  CFLAGS+=-std=c++0x
