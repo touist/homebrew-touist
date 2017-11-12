@@ -28,26 +28,37 @@ end
 # From 609b2b6582564aa16876445f5ac4cd733546efc0 Mon Sep 17 00:00:00 2001
 # From: =?UTF-8?q?Ma=C3=ABl=20Valais?= <mael.valais@gmail.com>
 # Date: Tue, 5 Sep 2017 08:57:18 +0200
-# Subject: [PATCH] osx: moved default argument in mkLit() from definition to
+# Subject: [PATCH 2/4] osx: moved default argument in mkLit() from definition to
 #  declaration
-#
+
 #     minisat/core/SolverTypes.h:50:16: error: friend declaration specifying a
 #     default argument must be a definition
-#
+
 #         friend Lit mkLit(Var var, bool sign = false);
 # ---
 #  minisat/core/SolverTypes.h | 4 ++--
 #  1 file changed, 2 insertions(+), 2 deletions(-)
 
-# From 9dadee4a04fd693429fc4f29e8737be21a872220 Mon Sep 17 00:00:00 2001
+# From 74bfc8c0252fe80084b443b6732b46f30195180b Mon Sep 17 00:00:00 2001
 # From: =?UTF-8?q?Ma=C3=ABl=20Valais?= <mael.valais@gmail.com>
 # Date: Sun, 12 Nov 2017 20:47:48 +0100
-# Subject: [PATCH 3/3] _MSC_VER should not be set when not on MSVC
-
+# Subject: [PATCH 3/4] _MSC_VER should not be set when not on MSVC
 # It triggers, on clang 8.1.0, the error:
-
 # /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/8.1.0/include/inttypes.h:27:2:
 # error: MSVC does not have inttypes.h prior to Visual Studio 2013
+# ---
+#  Makefile | 4 ++--
+#  1 file changed, 2 insertions(+), 2 deletions(-)
+
+# From 87defe0b29567b09d10d44efa3bdda7313a622dc Mon Sep 17 00:00:00 2001
+# From: =?UTF-8?q?Ma=C3=ABl=20Valais?= <mael.valais@gmail.com>
+# Date: Sun, 12 Nov 2017 22:38:48 +0100
+# Subject: [PATCH 4/4] Small compatibility fix of spacing PRIi64 defs in Minisat
+#  headers.
+# ---
+# minisat/utils/Options.h | 6 +++---
+# 1 file changed, 3 insertions(+), 3 deletions(-)
+
 
 __END__
 diff --git a/Makefile b/Makefile
@@ -87,3 +98,26 @@ index 1ebcc73..709caa7 100644
  inline  Lit  operator ~(Lit p)              { Lit q; q.x = p.x ^ 1; return q; }
  inline  Lit  operator ^(Lit p, bool b)      { Lit q; q.x = p.x ^ (unsigned int)b; return q; }
  inline  bool sign      (Lit p)              { return p.x & 1; }
+diff --git a/minisat/utils/Options.h b/minisat/utils/Options.h
+index 9c1f406..1c9e156 100644
+--- a/minisat/utils/Options.h
++++ b/minisat/utils/Options.h
+@@ -282,15 +282,15 @@ class Int64Option : public Option
+         if (range.begin == INT64_MIN)
+             fprintf(stderr, "imin");
+         else
+-            fprintf(stderr, "%4"PRIi64, range.begin);
++            fprintf(stderr, "%4" PRIi64, range.begin);
+ 
+         fprintf(stderr, " .. ");
+         if (range.end == INT64_MAX)
+             fprintf(stderr, "imax");
+         else
+-            fprintf(stderr, "%4"PRIi64, range.end);
++            fprintf(stderr, "%4" PRIi64, range.end);
+ 
+-        fprintf(stderr, "] (default: %"PRIi64")\n", value);
++        fprintf(stderr, "] (default: %" PRIi64")\n", value);
+         if (verbose){
+             fprintf(stderr, "\n        %s\n", description);
+             fprintf(stderr, "\n");
