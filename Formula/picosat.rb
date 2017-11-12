@@ -3,13 +3,10 @@ class Picosat < Formula
   homepage "http://fmv.jku.at/picosat/"
   url "http://fmv.jku.at/picosat/picosat-965.tar.gz"
   sha256 "15169b4f28ba8f628f353f6f75a100845cdef4a2244f101a02b6e5a26e46a754"
+  revision 1
 
   bottle do
-    cellar :any_skip_relocation
-    sha256 "0d8fe1d4c2d3c047f5acafef440a761c763062cf4ac9649bfcf0ce787cbb1d24" => :sierra
   end
-
-  # depends_on "cmake" => :build
 
   def install
     system "./configure.sh"
