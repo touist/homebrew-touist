@@ -6,8 +6,6 @@ class Qute < Formula
   head "https://github.com/maelvalais/qute.git"
 
   bottle do
-    cellar :any
-    sha256 "023a9dbbef90d86cacf355dcc592fc005300f8ac52c04adadacb745af61a8f69" => :sierra
   end
 
   depends_on "boost"
