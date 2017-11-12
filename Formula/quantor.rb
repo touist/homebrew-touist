@@ -4,11 +4,13 @@ class Quantor < Formula
   url "http://fmv.jku.at/quantor/quantor-3.2.tar.gz"
   sha256 "7a82ebfd1c8ecc250325f311e725f6263bf69b412edcc2b600db2a25937d1189"
 
+  bottle do
+  end
+
   depends_on "picosat" => :build
   patch :DATA
 
   def install
-    # Remove unrecognized options if warned by configure
     system "./configure", "--picosat=#{Formula["picosat"].lib}"
     system "make"
     bin.install "quantor"
