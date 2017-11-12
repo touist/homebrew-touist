@@ -2,7 +2,7 @@ class Qute < Formula
   desc "A dependency learning QBF solver"
   homepage "https://github.com/maelvalais/qute"
   url "https://github.com/maelvalais/qute/archive/v0.0.1.tar.gz"
-  sha256 "d46774becd3a5046a0d442002f480d6467242407d3f537b9b003e441bdb46dbf"
+  sha256 "488825160ac586df7c0c642fff673731ba82647defa12941acde93bcf503a7d8"
   head "https://github.com/maelvalais/qute.git"
 
   bottle do
