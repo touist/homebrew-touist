@@ -5,6 +5,12 @@ class Rareqs < Formula
   sha256 "2d58097594e813036be922cb5914e6ba659e4bd424336dc7ed917d6c9191e2a3"
 
   bottle do
+    root_url "https://dl.bintray.com/touist/bottles-touist"
+    prefix "/home/linuxbrew/.linuxbrew"
+    cellar "/home/linuxbrew/.linuxbrew/Cellar"
+    sha256 "615d3bf364e77193615383469bb193a26082b8e50cf2f987f7640fc2dcb52937" => :sierra
+    sha256 "87c6c1b98cf9e561d5c4c4020c4378205bf4ec087da7ed1d1de83642041f6674" => :el_capitan
+    sha256 "f3802818ffcdf8a6073612288d53be13c3b73af9390f02a9b957fdfa5d7c3710" => :x86_64_linux
   end
 
   patch :DATA
