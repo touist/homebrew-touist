@@ -6,6 +6,12 @@ class Rareqs < Formula
   revision 1
 
   bottle do
+    root_url "https://dl.bintray.com/touist/bottles-touist"
+    prefix "/usr/local"
+    cellar :any_skip_relocation
+    sha256 "61fa05afe9e96f3b75c7fa1d6d505b674ce493a54db963c806fac2cd396753af" => :sierra
+    sha256 "faf44ae395744e4a1c057891ab4d15426131ef9b4e51c4d42220a3f02030ebdc" => :el_capitan
+    sha256 "d34531a1e2e6cc6b1302e61963df09f0a42ed62dc731355211019f3fe68f195c" => :x86_64_linux
   end
 
   patch :DATA
