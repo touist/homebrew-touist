@@ -8,6 +8,7 @@ class Quantor < Formula
   end
 
   depends_on "picosat" => :build
+
   patch :DATA
 
   def install
