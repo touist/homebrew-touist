@@ -38,8 +38,7 @@ install:
   - ln -s $PWD $(brew --repo $TRAVIS_REPO_SLUG) # 3)
   - git fetch --unshallow || true               # 4)
 
-  - export PATH=$PATH:$HOME/.local/bin
-  - pip install --user awscli
+  - brew install awscli
   - aws s3 sync s3://homebrew-touist-travis/${TRAVIS_BUILD_NUMBER} ~/shared || true
 
 script:
