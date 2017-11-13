@@ -55,18 +55,18 @@ index db3327a..1b5e072 100644
  $(EXEC):		$(COBJS)
 EOS
 
-# From bfe8a8e41b79091f93584f394e30d1293bf66537 Mon Sep 17 00:00:00 2001
-# From: =?UTF-8?q?Ma=C3=ABl=20Valais?= <mael.valais@gmail.com>
-# Date: Mon, 13 Nov 2017 15:06:58 +0100
-# Subject: [PATCH 3/3] use CURDIR (GNU make) instead of PWD in order to use
-#  'make -C simp rs'
+  # From bfe8a8e41b79091f93584f394e30d1293bf66537 Mon Sep 17 00:00:00 2001
+  # From: =?UTF-8?q?Ma=C3=ABl=20Valais?= <mael.valais@gmail.com>
+  # Date: Mon, 13 Nov 2017 15:06:58 +0100
+  # Subject: [PATCH 3/3] use CURDIR (GNU make) instead of PWD in order to use
+  #  'make -C simp rs'
 
-# See -C and CURDIR in https://www.gnu.org/software/make/manual/make.html
-# ---
-#  mtl/template.mk   | 2 +-
-#  parallel/Makefile | 2 +-
-#  simp/Makefile     | 2 +-
-#  3 files changed, 3 insertions(+), 3 deletions(-)
+  # See -C and CURDIR in https://www.gnu.org/software/make/manual/make.html
+  # ---
+  #  mtl/template.mk   | 2 +-
+  #  parallel/Makefile | 2 +-
+  #  simp/Makefile     | 2 +-
+  #  3 files changed, 3 insertions(+), 3 deletions(-)
   patch :p1, <<~EOS
 diff --git a/mtl/template.mk b/mtl/template.mk
 index 1b5e072..1950aae 100644
