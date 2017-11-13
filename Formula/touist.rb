@@ -1,8 +1,8 @@
 class Touist < Formula
   desc "The solver for the TouIST language"
   homepage "https://www.irit.fr/touist"
-  url "https://github.com/touist/touist/archive/v3.4.2.tar.gz"
-  sha256 "16bbe31d46d85575f42df00499ef83371076da3e517f9e44e35a5d842f8cffb6"
+  url "https://github.com/touist/touist/archive/v3.4.3.tar.gz"
+  sha256 "1c3bcc11077c40a51c31be259a09e37a2c4b95b396577b45b53fb3355bafda57"
   head "https://github.com/touist/touist.git", :shallow => false
   # We use the git history for `git describe --tags`, so no shallow clone
 
