@@ -7,10 +7,6 @@ class Touist < Formula
   # We use the git history for `git describe --tags`, so no shallow clone
 
   bottle do
-    root_url "https://dl.bintray.com/touist/bottles-touist"
-    sha256 "b324b4df8ea3e5f56ea533371c5b8c400b586d476e67196efe977c68f90f972b" => :sierra
-    sha256 "b1541c5060f5a9290396d8dc3396eb1348a11d30d907c8eeae681eb6cfd6448a" => :el_capitan
-    sha256 "661938f49baa7ab30a820381020608b8a08d766eb51024e22931852ea91ac059" => :x86_64_linux
   end
 
   depends_on "opam" => :build

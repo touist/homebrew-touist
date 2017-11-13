@@ -117,7 +117,7 @@ jobs:
       env: OS=any_linux
       script:
         - if cp -v ~/shared/* . ; then
-            brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --keep-old --verbose;
+            brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --verbose;
           else
             echo "==> No bottle found in the bucket, skipping --ci-upload";
           fi
