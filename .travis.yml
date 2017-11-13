@@ -117,6 +117,8 @@ jobs:
       rvm: 2.3
       env: OS=any_linux
       script:
+        # This hook will add [ci skip] the the commit messages for bottle DSL
+        - echo 'if grep -q "^.*update.*bottle.*\.$""; then echo "\n\n[ci skip]" >> "$1"; fi' > .git/hooks/commit-msg
         - if cp -v ~/shared/* . ; then
             brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --verbose;
           else
