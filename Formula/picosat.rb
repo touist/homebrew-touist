@@ -7,9 +7,9 @@ class Picosat < Formula
 
   bottle do
     root_url "https://dl.bintray.com/touist/bottles-touist"
-    rebuild 2
-    sha256 "243e0e1c5802d239e35ed26a6576e234e0f59ead56c3a265edfce596e8bc6f7e" => :sierra
-    sha256 "bb585d2a961ebbdf3355e5fa33275cbec11dd13968aacdaccf75ce96eb9eff3a" => :el_capitan
+    rebuild 3
+    sha256 "fec2ab3ddb718d4e97d9831dbcb472b67f0de773214c1e829031fbaf0dc09f47" => :sierra
+    sha256 "ef3f7a54476c05254c916a07a6658588d6e64e19d152a0992a618583bc4da181" => :el_capitan
     sha256 "c0172793bceb20e59b5a87e12514bb574b0840b21d5438803c3224ac3d390b76" => :x86_64_linux
   end
 
