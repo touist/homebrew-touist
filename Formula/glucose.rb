@@ -8,6 +8,15 @@ class Glucose < Formula
   url "https://www.labri.fr/perso/lsimon/downloads/softwares/glucose-syrup-4.1.tgz"
   sha256 "51aa1cf1bed2b14f1543b099e85a56dd1a92be37e6e3eb0c4a1fd883d5cc5029"
 
+  bottle do
+    root_url "https://dl.bintray.com/touist/bottles-touist"
+    prefix "/usr/local"
+    cellar :any_skip_relocation
+    sha256 "864e6e8128f0f52d578a60743a0f02629396852438ae200a9c48d008582e9d18" => :sierra
+    sha256 "67d0fee208eb06ce40e4d2bb689ae4b7b998413da3bb1ea4a012937eb644d7af" => :el_capitan
+    sha256 "c45e9206ba5709c061a9dbca00700534d5efcf795ed459cb8fdd9ebfb318a5cb" => :x86_64_linux
+  end
+
   def install
     system "make", "-C", "simp", "r", "libr"
     system "make", "-C", "parallel", "r", "libr"
