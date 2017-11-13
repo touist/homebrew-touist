@@ -48,7 +48,7 @@ class Touist < Formula
 
   test do
     (testpath/"test.touist").write <<-EOS.undent
-      a and b => c
+      (a and b => c) or d
     EOS
     system("#{bin}/touist", "#{testpath}/test.touist", "--solve")
     system("#{bin}/touist", "#{testpath}/test.touist", "--solve", "--smt", "QF_LIA")
