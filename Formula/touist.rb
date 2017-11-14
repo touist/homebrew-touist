@@ -8,9 +8,12 @@ class Touist < Formula
 
   bottle do
     root_url "https://dl.bintray.com/touist/bottles-touist"
-    sha256 "86278f62657c26291dfeb92de488340a3ac093259ec60b6217df851bd7e2655e" => :sierra
-    sha256 "14f90f165092ffc92975bcb4ee62d5c47e96f8a23ecb1a3fc18b702a17450fe8" => :el_capitan
-    sha256 "4734c20d50add1d51fc53afe3f39d0a028d41f6ec4ad10489d97a24a15b89a61" => :x86_64_linux
+    prefix "/usr/local"
+    cellar :any_skip_relocation
+    rebuild 1
+    sha256 "9c39f422f5b4450dcebd29c9cfdaf42e4e01bfe2f2aceb8dcbaba4c38930d93a" => :sierra
+    sha256 "3646e8f77d3c4cf83755a0ab5f00ab3c3d9ce2f612e9cffca6f2c9e92597f890" => :el_capitan
+    sha256 "ef01a4b7e6e84d53442d2638706113ca13965b470f61d35fbe244bce8882693d" => :x86_64_linux
   end
 
   depends_on "opam" => :build
