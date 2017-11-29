@@ -1,8 +1,8 @@
 class Touist < Formula
   desc "The solver for the TouIST language"
   homepage "https://www.irit.fr/touist"
-  url "https://github.com/touist/touist/archive/v3.4.4.tar.gz"
-  sha256 "c8d952cb6b62145321b8741b9c848fa85fae3528d9925cfd8205f483b6a1be3a"
+  url "https://github.com/touist/touist/archive/v3.5.0.tar.gz"
+  sha256 "7e8dedef983e90d4f318b6c8d2321a8b6fba88aebe52c925233886eb589a9afa"
   head "https://github.com/touist/touist.git", :shallow => false
   # We use the git history for `git describe --tags`, so no shallow clone
 
@@ -27,7 +27,7 @@ class Touist < Formula
     ENV["OPAMROOT"] = opamroot
     system "opam", "init", "--no-setup"
 
-    system "opam", "install", "ocamlfind", "ocamlbuild"
+    system "opam", "install", "ocamlfind", "jbuilder"
 
     # Install the optionnal opam dependencies
     # If CC is set to CC=clang during `opam install qbf`,
@@ -39,18 +39,10 @@ class Touist < Formula
 
     # Install the mandatory opam dependencies
     system "opam", "pin", "add", ".", "--no-action"
-    system "opam", "install", "touist", "--deps-only"
-
-    # configure touist
-    system "opam", "config", "exec", "--",
-           "ocaml", "setup.ml", "-configure",
-           "--enable-yices2", "--enable-qbf",
-           "--disable-lib",
-           "--prefix", prefix, "--mandir", man
-
-    system "opam", "config", "exec", "--",
-           "ocaml", "setup.ml", "-build"
-    ENV.deparallelize { system "make", "install" }
+    system "eval `opam config env`; opam install touist --deps-only"
+    system "eval `opam config env`; jbuilder build"
+    bin.install "_build/default/src/main.exe" => "touist"
+    man.install "_build/default/src/touist.1" => "touist.1"
   end
 
   test do
