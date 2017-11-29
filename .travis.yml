@@ -60,6 +60,11 @@ jobs:
       osx_image: xcode8.3
       env: OS=sierra-10.12
       rvm: system
+      before_install:
+        # Sometimes, brew update fails with the error 'Homebrew must be run
+        # under Ruby 2.3! You're running 2.0.0 (althouth ruby-portable is there).
+        # Workaround: double brew update: https://github.com/Homebrew/brew/issues/3299
+        - brew update | grep "==>" || brew update
 
     - &run-on-osx-old-xcode # only for xcode6.4 and xcode7.3
       os: osx
