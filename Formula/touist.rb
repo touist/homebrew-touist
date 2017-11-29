@@ -41,7 +41,7 @@ class Touist < Formula
     system "eval `opam config env`; opam install touist --deps-only"
     system "eval `opam config env`; jbuilder build"
     bin.install "_build/default/src/main.exe" => "touist"
-    man.install "_build/default/src/touist.1" => "touist.1"
+    man1.install "_build/default/src/touist.1" => "touist.1"
   end
 
   test do
