@@ -61,12 +61,15 @@ jobs:
       env: OS=sierra-10.12
       rvm: system
       before_install:
-        # Sometimes, brew update fails with the error 'Homebrew must be run
-        # under Ruby 2.3! You're running 2.0.0 (althouth ruby-portable is there).
-        # Workaround: double brew update: https://github.com/Homebrew/brew/issues/3299
-        - brew update | grep "==>" || brew update
-        # (brew doctor) fix broken symlinks (node@7)
-        - brew prune
+        # Sometimes, brew update fails with the error `Homebrew must be run
+        # under Ruby 2.3! You are running 2.0.0' (althouth ruby-portable
+        # is there). Workaround (A): run double brew update (see
+        # https://github.com/Homebrew/brew/issues/3299). This seems to happen
+        # as soon as the macos image on Travis is 'too old'.
+        # The issue of broken symlink (B) also happens at the same time.
+        - brew update | grep "==>" || brew update   # (A)
+        # (brew doctor) fix some random broken symlinks
+        - brew prune                                # (B)
 
     - &run-on-osx-old-xcode # only for xcode6.4 and xcode7.3
       os: osx
@@ -74,14 +77,17 @@ jobs:
       env: OS=el_capitan-10.11
       rvm: system
       before_install: # IMPORTANT: HOMEBREW_DEVELOPER must not be set here.
-        # Sometimes, brew update fails with the error 'Homebrew must be run
-        # under Ruby 2.3! You're running 2.0.0 (althouth ruby-portable is there).
-        # Workaround: double brew update: https://github.com/Homebrew/brew/issues/3299
-        - brew update | grep "==>" || brew update
+        # Sometimes, brew update fails with the error `Homebrew must be run
+        # under Ruby 2.3! You are running 2.0.0' (althouth ruby-portable
+        # is there). Workaround (A): run double brew update (see
+        # https://github.com/Homebrew/brew/issues/3299). This seems to happen
+        # as soon as the macos image on Travis is 'too old'.
+        # The issue of broken symlink (B) also happens at the same time.
+        - brew update | grep "==>" || brew update   # (A)
+        # (brew doctor) fix some random broken symlinks
+        - brew prune                                # (B)
         # (brew doctor) fix the many missing deps on gnupg and others
         - brew missing | cut -d':' -f1 | xargs brew uninstall
-        # (brew doctor) fix broken symlinks (oclint and cloog)
-        - brew prune
         # (brew doctor) fix "your XQuartz (2.7.9) is outdated" if it is installed
         - brew cask uninstall xquartz || true
         # (brew test-bot on travis) fix libyaml 0.1.6_1 already installed
