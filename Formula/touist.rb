@@ -27,7 +27,7 @@ class Touist < Formula
     ENV["OPAMROOT"] = opamroot
     system "opam", "init", "--no-setup"
 
-    system "opam", "install", "ocamlfind", "ocamlbuild"
+    system "opam", "install", "ocamlfind", "jbuilder"
 
     # Install the optionnal opam dependencies
     # If CC is set to CC=clang during `opam install qbf`,
@@ -39,18 +39,10 @@ class Touist < Formula
 
     # Install the mandatory opam dependencies
     system "opam", "pin", "add", ".", "--no-action"
-    system "opam", "install", "touist", "--deps-only"
-
-    # configure touist
-    system "opam", "config", "exec", "--",
-           "ocaml", "setup.ml", "-configure",
-           "--enable-yices2", "--enable-qbf",
-           "--disable-lib",
-           "--prefix", prefix, "--mandir", man
-
-    system "opam", "config", "exec", "--",
-           "ocaml", "setup.ml", "-build"
-    ENV.deparallelize { system "make", "install" }
+    system "eval `opam config env`; opam install touist --deps-only"
+    system "eval `opam config env`; jbuilder build"
+    bin.install "_build/default/src/main.exe" => "touist"
+    man.install "_build/default/src/touist.1" => "touist.1"
   end
 
   test do
