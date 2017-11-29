@@ -65,6 +65,8 @@ jobs:
         # under Ruby 2.3! You're running 2.0.0 (althouth ruby-portable is there).
         # Workaround: double brew update: https://github.com/Homebrew/brew/issues/3299
         - brew update | grep "==>" || brew update
+        # (brew doctor) fix broken symlinks (node@7)
+        - brew prune
 
     - &run-on-osx-old-xcode # only for xcode6.4 and xcode7.3
       os: osx
