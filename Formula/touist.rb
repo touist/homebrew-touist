@@ -2,7 +2,7 @@ class Touist < Formula
   desc "The solver for the TouIST language"
   homepage "https://www.irit.fr/touist"
   url "https://github.com/touist/touist/archive/v3.5.0.tar.gz"
-  sha256 "7e8dedef983e90d4f318b6c8d2321a8b6fba88aebe52c925233886eb589a9afa"
+  sha256 "859a4428ced26ed38615a606138c02ec63541cd34cf94a37b3e35d5bf46d40c4"
   head "https://github.com/touist/touist.git", :shallow => false
   # We use the git history for `git describe --tags`, so no shallow clone
 
@@ -43,8 +43,6 @@ class Touist < Formula
     # jbuilder is not found. Workaround: use eval `opam config env`
     # instead.
     system "eval `opam config env`; opam install touist --deps-only"
-    # jbuilder subst will turn %%VERSION%% into real version name
-    system "eval `opam config env`; jbuilder subst"
     system "eval `opam config env`; jbuilder build"
     bin.install "_build/default/src/main.exe" => "touist"
     man1.install "_build/default/src/touist.1" => "touist.1"
