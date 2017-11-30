@@ -39,7 +39,12 @@ class Touist < Formula
 
     # Install the mandatory opam dependencies
     system "opam", "pin", "add", ".", "--no-action"
+    # For some reason, `opam config exec -- jbuilder build` say that
+    # jbuilder is not found. Workaround: use eval `opam config env`
+    # instead.
     system "eval `opam config env`; opam install touist --deps-only"
+    # jbuilder subst will turn %%VERSION%% into real version name
+    system "eval `opam config env`; jbuilder subst"
     system "eval `opam config env`; jbuilder build"
     bin.install "_build/default/src/main.exe" => "touist"
     man1.install "_build/default/src/touist.1" => "touist.1"
