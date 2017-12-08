@@ -7,6 +7,12 @@ env:
   global:
     - HOMEBREW_BINTRAY_USER=maelvalais
     - TAP_BOTTLE_DOMAIN=https://dl.bintray.com/touist
+    # Beyond these global variables, you also need to set some secret variables
+    # in your travis-ci settings: 
+    # - AWS_ACCESS_KEY_ID
+    # - AWS_SECRET_ACCESS_KEY          (for the AWS S3 bucket)
+    # - GITHUB_TOKEN                   (for pushing bottle DSL commits)
+    # - HOMEBREW_BINTRAY_KEY           (for the Bintray repo)
 
 # Note: I removed $HOME/Library/Caches/Homebrew from the caches
 # because it was enormous (~2GB for the 4 jobs). This is because
