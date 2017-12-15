@@ -1,7 +1,3 @@
-# Documentation: https://docs.brew.sh/Formula-Cookbook.html
-#                http://www.rubydoc.info/github/Homebrew/brew/master/Formula
-# PLEASE REMOVE ALL GENERATED COMMENTS BEFORE SUBMITTING YOUR PULL REQUEST!
-
 class Glucose < Formula
   desc "A SAT Solver with parallel abilities based on Minisat"
   homepage "https://www.labri.fr/perso/lsimon/glucose/"
