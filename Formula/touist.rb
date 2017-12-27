@@ -27,8 +27,6 @@ class Touist < Formula
     ENV["OPAMROOT"] = opamroot
     system "opam", "init", "--no-setup"
 
-    system "opam", "install", "ocamlfind", "jbuilder"
-
     # Install the optionnal opam dependencies
     # If CC is set to CC=clang during `opam install qbf`,
     # then the ./configure of  libs/quantor-3.2 won't not work
@@ -37,6 +35,9 @@ class Touist < Formula
 
     system "opam", "install", "yices2", "qbf"
 
+    # jbuilder subst will turn %%VERSION%% into real version name; we need
+    # to do that BEFORE the pinning.
+    system "eval `opam config env`; jbuilder subst"
     # Install the mandatory opam dependencies
     system "opam", "pin", "add", ".", "--no-action"
     # For some reason, `opam config exec -- jbuilder build` say that
