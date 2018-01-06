@@ -33,7 +33,7 @@ class Touist < Formula
     # because it (seemingly) expects CC to be 'cc*' or 'gcc*'.
     ENV["CC"] = "" if ENV["CC"] == "clang"
 
-    system "opam", "install", "yices2", "qbf"
+    system "opam", "install", "jbuilder", "yices2", "qbf"
 
     # jbuilder subst will turn %%VERSION%% into real version name; we need
     # to do that BEFORE the pinning.
