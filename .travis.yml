@@ -8,7 +8,7 @@ env:
     - HOMEBREW_BINTRAY_USER=maelvalais
     - TAP_BOTTLE_DOMAIN=https://dl.bintray.com/touist
     # Beyond these global variables, you also need to set some secret variables
-    # in your travis-ci settings: 
+    # in your travis-ci settings:
     # - AWS_ACCESS_KEY_ID
     # - AWS_SECRET_ACCESS_KEY          (for the AWS S3 bucket)
     # - GITHUB_TOKEN                   (for pushing bottle DSL commits)
@@ -47,19 +47,23 @@ install:
   - brew install awscli
   - aws s3 sync s3://homebrew-touist-travis/${TRAVIS_BUILD_NUMBER} ~/shared || true
 
-script:
+  # 'brew doctor' must be run under HOMEBREW_DEVELOPER=1. Otherwise,
+  # it returns 1 with the message "this osx version is outdated" on old osx ver.
+  - HOMEBREW_DEVELOPER=1 brew doctor
   # Note on HOMEBREW_DEVELOPER: I don't want to put in env.global because
   # it should be '1' only during test-bot. If it is '1' during
   # brew cask uninstall... it will fail on the deprecation notice.
   # Unless I am in 'brew test-bot', I don't want to fail on warnings.
-  # Also, 'brew doctor' must be run under HOMEBREW_DEVELOPER=1. Otherwise,
-  # it returns 1 with the message "this osx version is outdated" on old osx ver.
-  - export HOMEBREW_DEVELOPER=1
-  - brew doctor # needs HOMEBREW_DEVELOPER because of outdated osx returning 1
-  - brew test-bot
+
+script:
+  - |
+    if [ $TRAVIS_EVENT_TYPE = cron ]; then
+      brew test-bot Formula/*.rb;
+    else
+      brew test-bot;
+    fi
   - cp *.bottle*.* ~/shared 2>/dev/null || echo "==> No bottle created here"
 
-# https://docs.travis-ci.com/user/reference/osx/#OS-X-Version
 jobs:
   include:
     - os: osx
@@ -76,6 +80,8 @@ jobs:
         - brew update | grep "==>" || brew update   # (A)
         # (brew doctor) fix some random broken symlinks
         - brew prune                                # (B)
+        # (brew doctor) fix the missing deps
+        - brew missing | cut -d':' -f1 | xargs brew uninstall
 
     - &run-on-osx-old-xcode # only for xcode6.4 and xcode7.3
       os: osx
@@ -131,7 +137,7 @@ jobs:
 
     - <<: *run-on-linux
       stage: deploy
-      if: branch = master AND type != pull_request
+      if: branch = master AND type NOT IN (pull_request, cron)
       os: linux
       rvm: 2.3
       env: OS=any_linux
