@@ -114,7 +114,6 @@ jobs:
     - &run-on-linux
       os: linux
       env: OS=x86_64_linux
-      rvm: 2.3
       before_install:
         # Fix the permission problem on linux (664 instead of 644) during
         # git clone (the one done by travis-ci). Homebrew needs formulas to be
@@ -128,10 +127,12 @@ jobs:
 
         # Instal linuxbrew
         - export PATH="/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH";
-        - yes '' | sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)";
+        # I added 'brew vendor-install ruby' because sometimes the install would
+        # fail on 'Homebrew must be run under Ruby 2.3!' error.
+        - yes | sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)" || (brew vendor-install ruby && brew update --force)
         # Fix a `brew doctor` error on "config" scripts for some reason
         - sudo rm -f /home/travis/.phpenv/shims/php-config
-          /opt/pyenv/shims/*-config /usr/local/clang-3.9.0/bin/llvm-config
+          /opt/pyenv/shims/*-config /usr/local/clang-*/bin/llvm-config
       before_cache:
         - brew cleanup
 
@@ -139,7 +140,6 @@ jobs:
       stage: deploy
       if: branch = master AND type NOT IN (pull_request, cron)
       os: linux
-      rvm: 2.3
       env: OS=any_linux
       script:
         # This hook will add [ci skip] the the commit messages for bottle DSL
