@@ -57,8 +57,11 @@ install:
 
 script:
   - |
+    set -e;
     if [ $TRAVIS_EVENT_TYPE = cron -o $TRAVIS_EVENT_TYPE = api ]; then
-      brew test-bot Formula/*.rb;
+      for f in Formula/*.rb; do
+        brew install $f && brew test $f;
+      done;
     else
       brew test-bot;
     fi
