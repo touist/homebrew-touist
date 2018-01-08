@@ -16,9 +16,11 @@ class Touist < Formula
     sha256 "07812216c59b6154f69cb632c7b264829177dcb5e3ac3c10329f654ef76c13ce" => :x86_64_linux
   end
 
+  option "without-gmp", "Build without gmp which disables the yices2 support"
+
   depends_on "opam" => :build
   depends_on "ocaml" => :build
-  depends_on "gmp"
+  depends_on "gmp" => :recommended
 
   def install
     ENV["OPAMYES"] = "1"
@@ -33,7 +35,7 @@ class Touist < Formula
     # because it (seemingly) expects CC to be 'cc*' or 'gcc*'.
     ENV["CC"] = "" if ENV["CC"] == "clang"
 
-    system "opam", "install", "jbuilder", "yices2", "qbf"
+    system "opam", "install", "jbuilder", "qbf", *("yices2" if build.with? "gmp")
 
     # jbuilder subst will turn %%VERSION%% into real version name; we need
     # to do that BEFORE the pinning.
@@ -54,7 +56,7 @@ class Touist < Formula
       (a and b => c) or d
     EOS
     system("#{bin}/touist", "#{testpath}/test.touist", "--solve")
-    system("#{bin}/touist", "#{testpath}/test.touist", "--solve", "--smt", "QF_LIA")
+    system("#{bin}/touist", "#{testpath}/test.touist", "--solve", "--smt", "QF_LIA") if build.with? "gmp"
     system("#{bin}/touist", "#{testpath}/test.touist", "--solve", "--qbf")
   end
 end
