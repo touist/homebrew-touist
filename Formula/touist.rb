@@ -8,7 +8,6 @@ class Touist < Formula
 
   bottle do
     root_url "https://dl.bintray.com/touist/bottles-touist"
-    prefix "/usr/local"
     cellar :any_skip_relocation
     rebuild 4
     sha256 "2c701f0b28219c0f6f39cd99aa3339bf41ed13512cc56c53f5d7e11fffa58bff" => :sierra
@@ -60,3 +59,4 @@ class Touist < Formula
     system("#{bin}/touist", "#{testpath}/test.touist", "--solve", "--qbf")
   end
 end
+
