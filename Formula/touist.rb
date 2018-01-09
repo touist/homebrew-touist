@@ -59,4 +59,3 @@ class Touist < Formula
     system("#{bin}/touist", "#{testpath}/test.touist", "--solve", "--qbf")
   end
 end
-
