@@ -26,6 +26,8 @@ cache:
     - "$HOME/.gem/ruby"
 
 install:
+  # Fix travis log truncated (https://github.com/travis-ci/travis-ci/issues/8920)
+  - python -c "import fcntl; fcntl.fcntl(1, fcntl.F_SETFL, 0)"
   # the official test-bot won't let you run inside TravisCI, so we use
   # davidchall's one. David's test-bot cannot push the commit using
   # Oauth github + https (only ssh) so I use my own.
@@ -56,8 +58,7 @@ install:
   # Unless I am in 'brew test-bot', I don't want to fail on warnings.
 
 script:
-  - |
-    set -e;
+  - set -e;
     if [ $TRAVIS_EVENT_TYPE = cron -o $TRAVIS_EVENT_TYPE = api ]; then
       for f in Formula/*.rb; do
         brew install $f && brew test $f;
@@ -145,13 +146,42 @@ jobs:
       os: linux
       env: OS=any_linux
       script:
-        # This hook will add [ci skip] the the commit messages for bottle DSL
-        - echo 'echo "\n\n[ci skip]" >> "$1"' > .git/hooks/commit-msg; chmod +x .git/hooks/commit-msg
         - if cp -v ~/shared/* . ; then
-            brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --verbose;
+            brew test-bot --ci-upload --no-commit --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --verbose;
           else
             echo "==> No bottle found in the bucket, skipping --ci-upload";
           fi
+        # Discard the commit created by 'test-bot --ci-upload'
+        - git reset --hard HEAD^
+        # $name is the name of the formula. In the end, we will have a commit
+        # with the message: 'name: update 0.0.1_2 bottle.'
+        - name=$(ls *.bottle.json | head -1 | cut -d':' -f1)
+        # This is a trick so that 'prefix' and 'cellar' are removed if they
+        # are equal to DEFAULT_PREFIX and DEFAULT_CELLAR even though we run
+        # 'brew bottle' on a linux setup.
+        - sed -i 's:/usr/local:/home/linuxbrew/.linuxbrew:g' *.json
+        # Step 1: linux bottles
+        - brew bottle --merge --write *linux.bottle.json # commit linux bottle
+        - rm *linux.bottle.json
+        - sed -i "/rebuild [0-9][0-9]*$/d" # the mac step also adds this
+        - sed -i "s:\(cellar\|prefix .*\):\1 if OS.linux?:g" Formula/$name.rb
+        - git commit -a --amend --no-edit
+        # Step 2: mac bottles
+        - git checkout HEAD~1
+        - brew bottle --merge --write *.bottle.json # commit mac bottle
+        - sed -i "s:\(cellar\|prefix .*\):\1 if OS.mac?:g" Formula/$name.rb
+        - git commit -a --amend --no-edit
+        # Step 3: merge the mac bottle commit and the linux bottle commit
+        - git checkout @{-1} # back to main branch
+        - echo '* merge=union' > .gitattributes
+        - git merge @{-1} --squash
+        - git commit --amend --no-edit # squash the mac edits into the linux commit
+        # Step 4: add [ci skip] to the message so that the bottle is not built twice
+        - git show -s --format=%B @ | cat - <(echo "[ci skip]") | git commit -a --amend --file=-
+        - git log -p -n3
+        # Step 5: push!
+        - git push https://${GITHUB_TOKEN}@github.com/touist/homebrew-touist.git master
+
       after_script:
         # Clean the bucket
         #- aws s3 rm s3://homebrew-touist-travis/${TRAVIS_BUILD_NUMBER} --recursive
@@ -160,3 +190,8 @@ after_script:
   # In case the AWS_SECRET_ACCESS_KEY and AWS_SECRET_ACCESS_KEY are not
   # available, we don't want the build to fail.
   - aws s3 sync ~/shared s3://homebrew-touist-travis/${TRAVIS_BUILD_NUMBER} || true
+
+# On failure, the end of the log gets truncated and we cannot diagnose
+# the issue. See https://github.com/travis-ci/travis-ci/issues/8973
+after_failure:
+  - sleep 10
