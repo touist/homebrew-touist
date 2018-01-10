@@ -8,11 +8,12 @@ class Touist < Formula
 
   bottle do
     root_url "https://dl.bintray.com/touist/bottles-touist"
+    prefix "/usr/local"
     cellar :any_skip_relocation
-    rebuild 4
-    sha256 "2c701f0b28219c0f6f39cd99aa3339bf41ed13512cc56c53f5d7e11fffa58bff" => :sierra
-    sha256 "9faffa504df61d6d3b46666b380d94d8356a0d7a740559152224f948007897a0" => :el_capitan
-    sha256 "07812216c59b6154f69cb632c7b264829177dcb5e3ac3c10329f654ef76c13ce" => :x86_64_linux
+    rebuild 5
+    sha256 "65bac76f8386383111d84871495370b2de5de95e76d509bfe8e470740d6f950b" => :sierra
+    sha256 "f9cb4b7bc66515fbf8ab10810b81129930271d284eabafb01f0ee602ad03b438" => :el_capitan
+    sha256 "ceaa8ef6cc0b488359cece900ef2fb0c19edeafd223e9790f54334d0383f63e7" => :x86_64_linux
   end
 
   option "without-gmp", "Build without gmp which disables the yices2 support"
