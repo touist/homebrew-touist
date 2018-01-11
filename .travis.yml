@@ -1,8 +1,16 @@
 # Inspired from the .travis.yml in
 # https://github.com/davidchall/homebrew-hep/
 
+# This script can be executed in three different modes:
+# - cron/api (api is when you select 'trigger build' in travis): in this mode,
+#   all the formulas are tested to make sure that there is no shared lib
+#   breakage
+# - push to master: in this mode, the updated formulas are built and bottled
+#   and the bottles are pushed to bintray, commited and pushed.
+# - pull-request: same as 'push on master' but without bintray and commit.
+
 language: ruby
-if: tag IS blank
+if: tag IS blank # build is disabled on tags (no rationale actually)
 env:
   global:
     - HOMEBREW_BINTRAY_USER=maelvalais
@@ -146,41 +154,20 @@ jobs:
       os: linux
       env: OS=any_linux
       script:
-        - if cp -v ~/shared/* . ; then
-            brew test-bot --ci-upload --no-push --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --verbose;
+        # This hook will add [ci skip] the the commit messages for bottle DSL
+        # so that travis-ci does not re-build a duplicate bottle on pushing.
+        - echo 'echo "\n\n[ci skip]" >> "$1"' > .git/hooks/commit-msg; chmod +x .git/hooks/commit-msg
+        # We fail 'silently' if no bottle is found.
+        - |
+          if cp -v ~/shared/* . ; then
+            # This is a trick so that 'prefix' and 'cellar' are removed if they
+            # are equal to DEFAULT_PREFIX and DEFAULT_CELLAR even though we run
+            # 'brew bottle' on a linux setup.
+            sed -i 's:/usr/local:/home/linuxbrew/.linuxbrew:g' *.json;
+            brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --verbose;
           else
             echo "==> No bottle found in the bucket, skipping --ci-upload";
           fi
-        # Discard the commit created by 'test-bot --ci-upload', but before,
-        # catch the name of the package.
-        - name=$(git show -s --format=%B HEAD | head -1 | cut -d':' -f1)
-        - git reset --hard HEAD^
-        # This is a trick so that 'prefix' and 'cellar' are removed if they
-        # are equal to DEFAULT_PREFIX and DEFAULT_CELLAR even though we run
-        # 'brew bottle' on a linux setup.
-        - sed -i 's:/usr/local:/home/linuxbrew/.linuxbrew:g' *.json
-        # Step 1: linux bottles
-        - brew bottle --merge --write *linux.bottle.json # commit linux bottle
-        - rm *linux.bottle.json
-        - sed -i "/rebuild [0-9][0-9]*$/d" # the mac step also adds this
-        - sed -i "s:\(cellar\|prefix .*\):\1 if OS.linux?:g" Formula/$name.rb
-        - git commit -a --amend --no-edit
-        # Step 2: mac bottles
-        - git checkout HEAD~1
-        - brew bottle --merge --write *.bottle.json # commit mac bottle
-        - sed -i "s:\(cellar\|prefix .*\):\1 if OS.mac?:g" Formula/$name.rb
-        - git commit -a --amend --no-edit
-        # Step 3: merge the mac bottle commit and the linux bottle commit
-        - git checkout @{-1} # back to main branch
-        - echo '* merge=union' > .gitattributes
-        - git merge @{-1} --squash
-        - git commit --amend --no-edit # squash the mac edits into the linux commit
-        # Step 4: add [ci skip] to the message so that the bottle is not built twice
-        - git show -s --format=%B @ | cat - <(echo "[ci skip]") | git commit -a --amend --file=-
-        - git log -p -n3
-        # Step 5: push!
-        - git push https://${GITHUB_TOKEN}@github.com/touist/homebrew-touist.git master
-
       after_script:
         # Clean the bucket
         #- aws s3 rm s3://homebrew-touist-travis/${TRAVIS_BUILD_NUMBER} --recursive
@@ -189,8 +176,3 @@ after_script:
   # In case the AWS_SECRET_ACCESS_KEY and AWS_SECRET_ACCESS_KEY are not
   # available, we don't want the build to fail.
   - aws s3 sync ~/shared s3://homebrew-touist-travis/${TRAVIS_BUILD_NUMBER} || true
-
-# On failure, the end of the log gets truncated and we cannot diagnose
-# the issue. See https://github.com/travis-ci/travis-ci/issues/8973
-after_failure:
-  - sleep 10
