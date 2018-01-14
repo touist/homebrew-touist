@@ -164,6 +164,14 @@ jobs:
             # are equal to DEFAULT_PREFIX and DEFAULT_CELLAR even though we run
             # 'brew bottle' on a linux setup.
             sed -i 's:/usr/local:/home/linuxbrew/.linuxbrew:g' *.json;
+            # Travis does not provide a high_sierra image yet, but I can use the
+            # sierra one and pretend it is a high_sierra bottle. I test them regularly in
+            # case it doesn't work.
+            ls *.sierra.bottle.json | while read json; do
+              sed 's/sierra/high_sierra/g' $json > ${json/sierra/high_sierra};
+              bottle=`ls ${json/bottle*/}*.tar.gz`;
+              cp ${bottle} ${bottle/sierra/high_sierra};
+            done;
             brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=touist --verbose;
           else
             echo "==> No bottle found in the bucket, skipping --ci-upload";
