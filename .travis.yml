@@ -69,7 +69,14 @@ script:
   - set -e;
     if [ $TRAVIS_EVENT_TYPE = cron -o $TRAVIS_EVENT_TYPE = api ]; then
       for f in Formula/*.rb; do
-        brew install $f && brew test $f;
+        brew install $f;
+        if ! brew linkage --test $f; then
+          rev=$(grep revision $f | sed 's/^[^0-9]*\([0-9]*\)$/\1/');
+          sed -i "s/revision [0-9]*/revision $(expr $rev + 1)" $f;
+          git add $f;
+          git commit -m "bump revision of $f after brew linkage errored";
+          git push https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git master;
+        fi;
       done;
     else
       brew test-bot;
