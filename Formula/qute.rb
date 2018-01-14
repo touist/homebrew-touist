@@ -35,3 +35,4 @@ class Qute < Formula
     assert_equal "SAT", shell_output("#{bin}/qute #{testpath}/test.dimacs", result = 10).strip
   end
 end
+

@@ -37,3 +37,4 @@ class Picosat < Formula
     EOS
   end
 end
+

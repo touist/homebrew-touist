@@ -26,3 +26,4 @@ class Lingeling < Formula
     shell_output("#{bin}/lingeling #{testpath}/test.dimacs", result = 10).strip
   end
 end
+
