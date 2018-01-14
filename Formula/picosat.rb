@@ -7,10 +7,12 @@ class Picosat < Formula
 
   bottle do
     root_url "https://dl.bintray.com/touist/bottles-touist"
-    rebuild 3
-    sha256 "fec2ab3ddb718d4e97d9831dbcb472b67f0de773214c1e829031fbaf0dc09f47" => :sierra
-    sha256 "ef3f7a54476c05254c916a07a6658588d6e64e19d152a0992a618583bc4da181" => :el_capitan
-    sha256 "c0172793bceb20e59b5a87e12514bb574b0840b21d5438803c3224ac3d390b76" => :x86_64_linux
+    cellar :any_skip_relocation
+    rebuild 4
+    sha256 "3a1d2f656f23bb76976b062a261fa6cb527c3fa02e012202a314e02d1defe962" => :high_sierra
+    sha256 "3a1d2f656f23bb76976b062a261fa6cb527c3fa02e012202a314e02d1defe962" => :sierra
+    sha256 "cdd30b793974be7fe709ff1dcfe0e5a7d1aafc893a4512dbdcf338f379bf9bcd" => :el_capitan
+    sha256 "53bf0c60ed8759f85a7bdef64c8f2c588f76e27b0437a9a0daebff11390cbd34" => :x86_64_linux
   end
 
   def install
