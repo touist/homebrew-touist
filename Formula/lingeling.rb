@@ -6,9 +6,12 @@ class Lingeling < Formula
 
   bottle do
     root_url "https://dl.bintray.com/touist/bottles-touist"
-    sha256 "141f132d5ed58f930ada22fbe81d63e4115b9f78b8fb2ca3fa266e30e5fdf0a3" => :sierra
-    sha256 "be1e33155185e36cbfbc48a743efd14d65edbfc174d2e31e4386414ea2153233" => :el_capitan
-    sha256 "b24481b3ac4a7b02114ea5d627aff7cd6e2bb1551e4b4f073d3aa1d580f787c8" => :x86_64_linux
+    cellar :any_skip_relocation
+    rebuild 1
+    sha256 "1838b06f007ef284b61151f294bc18bb4aaa6cf8f12653348f140bc5131d9ede" => :high_sierra
+    sha256 "1838b06f007ef284b61151f294bc18bb4aaa6cf8f12653348f140bc5131d9ede" => :sierra
+    sha256 "c8f51d68f3c0de8a14342b612e2f0b493e50c0adab27ec313a4d57207ff8e2e5" => :el_capitan
+    sha256 "0e99581140eb8482e4895681bfc5cf04ac095e2199d0215c778ec41cf65c96ab" => :x86_64_linux
   end
 
   def install
