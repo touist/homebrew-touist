@@ -6,11 +6,12 @@ class Quantor < Formula
 
   bottle do
     root_url "https://dl.bintray.com/touist/bottles-touist"
-    prefix "/usr/local"
     cellar :any_skip_relocation
-    sha256 "1500ee8e0bd88e02e74d74c57028a98ef6e9f3555a0ee27eba98d7a024fed347" => :sierra
-    sha256 "230115af867ab98a44e434e98e3fadadcb9d88e7bb4458176381f6423b654310" => :el_capitan
-    sha256 "bec41da1aa3154758a66bfd09e90bc5941a4fa1bd141038aff2dbf44fed733c5" => :x86_64_linux
+    rebuild 1
+    sha256 "e44188a9ccabc1b21a3370891c6bdb2e8927e15f42b6e137d4754f56319f4e84" => :high_sierra
+    sha256 "e44188a9ccabc1b21a3370891c6bdb2e8927e15f42b6e137d4754f56319f4e84" => :sierra
+    sha256 "674f3d0997ab993b65ff058986e46247c39870bc9e22a57a2c0870ae0db828d4" => :el_capitan
+    sha256 "33db76fa3a93976e6068e5fce9a871803da23cac44be4682c078860cb5a0faf8" => :x86_64_linux
   end
 
   depends_on "picosat" => :build
