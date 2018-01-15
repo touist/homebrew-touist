@@ -20,7 +20,8 @@ class Touist < Formula
 
   depends_on "opam" => :build
   depends_on "ocaml" => :build
-  depends_on "gmp" => [:recommended, :build]
+  depends_on "gmp" => [:recommended, :build] if OS.mac?
+  depends_on "gmp" => :recommended if OS.linux?
 
   def install
     ENV["OPAMYES"] = "1"
