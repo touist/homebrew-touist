@@ -66,21 +66,20 @@ install:
   # Unless I am in 'brew test-bot', I don't want to fail on warnings.
 
 script:
-  - set -e;
-    if [ $TRAVIS_EVENT_TYPE = cron -o $TRAVIS_EVENT_TYPE = api ]; then
+    - |
+    if [[ $TRAVIS_EVENT_TYPE =~ cron|api ]]; then
+      brew install *.rb || exit 123
       for f in *.rb; do
-        brew install $f;
-        if ! brew linkage --test $f; then
-          rev=$(grep revision $f | sed 's/^[^0-9]*\([0-9]*\)$/\1/');
-          sed -i "s/revision [0-9]*/revision $(expr $rev + 1)" $f;
-          git add $f;
-          git commit -m "bump revision of $f after brew linkage errored";
-          git push https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git master;
-        fi;
-      done;
-    else
-      brew test-bot;
+        if ! brew linkage --test ${f/\.rb/}; then
+          rev=$(grep revision $f | sed 's/^[^0-9]*\([0-9]*\)$/\1/')
+          sed -i "s/revision [0-9]*/revision $(expr $rev + 1)" $f
+          git commit -a -m "${f/\.rb/}: bump from revision $rev to $(expr $rev + 1) (brew linkage)"
+          git log -n2 -p
+          git push https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git master
+        fi
+      done
     fi
+  - if [[ $TRAVIS_EVENT_TYPE =~ push|pull_request ]]; then brew test-bot; fi
   - cp *.bottle*.* ~/shared 2>/dev/null || echo "==> No bottle created here"
 
 jobs:
