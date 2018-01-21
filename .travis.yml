@@ -66,7 +66,7 @@ install:
   # Unless I am in 'brew test-bot', I don't want to fail on warnings.
 
 script:
-    - |
+  - |
     if [[ $TRAVIS_EVENT_TYPE =~ cron|api ]]; then
       brew install *.rb || exit 123
       for f in *.rb; do
