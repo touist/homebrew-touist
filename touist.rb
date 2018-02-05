@@ -46,7 +46,7 @@ class Touist < Formula
   end
 
   test do
-    (testpath/"test.touist").write <<-EOS.undent
+    (testpath/"test.touist").write <<~EOS
       (a and b => c) or d
     EOS
     system("#{bin}/touist", "#{testpath}/test.touist", "--solve")
