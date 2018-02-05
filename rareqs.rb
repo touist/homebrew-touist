@@ -23,7 +23,7 @@ class Rareqs < Formula
   end
 
   test do
-    (testpath/"test.dimacs").write <<-EOS.undent
+    (testpath/"test.dimacs").write <<~EOS
       p cnf 2 1
       e 2 0
       a 1 0

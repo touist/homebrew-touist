@@ -22,7 +22,7 @@ class Lingeling < Formula
   end
 
   test do
-    (testpath/"test.dimacs").write <<-EOS.undent
+    (testpath/"test.dimacs").write <<~EOS
       p cnf 2 1
       2 1 0
     EOS
