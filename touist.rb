@@ -7,6 +7,7 @@ class Touist < Formula
   # We use the git history for `git describe --tags`, so no shallow clone
 
   bottle do
+
   end
 
   option "without-gmp", "Build without gmp which disables the yices2 support"
