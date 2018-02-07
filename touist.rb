@@ -7,7 +7,6 @@ class Touist < Formula
   # We use the git history for `git describe --tags`, so no shallow clone
 
   bottle do
-
   end
 
   option "without-gmp", "Build without gmp which disables the yices2 support"
@@ -34,6 +33,7 @@ class Touist < Formula
 
     # jbuilder subst will turn %%VERSION%% into real version name; we need
     # to do that BEFORE the pinning.
+
     system "eval `opam config env`; jbuilder subst"
     # Install the mandatory opam dependencies
     system "opam", "pin", "add", ".", "--no-action"
