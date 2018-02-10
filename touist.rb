@@ -9,6 +9,7 @@ class Touist < Formula
   bottle do
   end
 
+
   option "without-gmp", "Build without gmp which disables the yices2 support"
 
   depends_on "opam" => :build
