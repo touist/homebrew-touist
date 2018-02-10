@@ -84,7 +84,6 @@ jobs:
     - os: osx
       osx_image: xcode8.3
       env: OS=sierra-10.12
-      rvm: system
       before_install: # IMPORTANT: HOMEBREW_DEVELOPER must not be set here.
         # First we uninstall any outdated versions of xquartz; otherwise,
         # Homebrew will complain of of older version (2.9.7) being outdated
@@ -106,7 +105,6 @@ jobs:
       os: osx
       osx_image: xcode7.3
       env: OS=el_capitan-10.11
-      rvm: system
       before_install: # IMPORTANT: HOMEBREW_DEVELOPER must not be set here.
         - brew cask outdated xquartz || brew cask uninstall xquartz
         - mkdir ~/usr_local && sudo mv /usr/local/* ~/usr_local
