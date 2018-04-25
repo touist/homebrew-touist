@@ -14,16 +14,21 @@ language: ruby
 if: tag IS blank AND NOT type IN (push)
 env:
   global:
+    ###### Bintray configuration ######
+    - TAP_BOTTLE_ORG=touist                # Used in this script only
+    - TAP_BOTTLE_DOMAIN=https://dl.bintray.com/$TAP_BOTTLE_ORG
     - HOMEBREW_BINTRAY_USER=maelvalais
-    - TAP_BOTTLE_DOMAIN=https://dl.bintray.com/touist
-    - AWS_REGION=eu-west-1 # needed because the aws-sdk-s3 gem errors without it
+    # HOMEBREW_BINTRAY_KEY                 # Secret variable set in Travis CI
+
+    ###### AWS S3 configuration ######
+    - AWS_REGION=eu-west-1                 # aws-sdk-s3 gem errors without it
     - BUCKET=homebrew-touist-travis
-    # Beyond these global variables, you also need to set some secret variables
-    # in your travis-ci settings:
-    # - AWS_ACCESS_KEY_ID
-    # - AWS_SECRET_ACCESS_KEY          (for the AWS S3 bucket)
-    # - GITHUB_TOKEN                   (for pushing bottle DSL commits)
-    # - HOMEBREW_BINTRAY_KEY           (for the Bintray repo)
+    # AWS_ACCESS_KEY_ID                    # Secret variable set in Travis CI
+    # AWS_SECRET_ACCESS_KEY                # Secret variable set in Travis CI
+
+    ###### Github configuration ######
+    - GITHUB_USER=touist             # Where tag e.g. pr-1234 will be pushed
+    # GITHUB_TOKEN                   # (Secret) For pushing bottle DSL commits
 
 # (1) remember tu use 'brew cleanup -s' at the end of the travis script;
 # otherwise, the $HOME/Library/Caches/Homebrew folder will be enormous
@@ -170,7 +175,7 @@ jobs:
         - |
           if ls *.{json,tar.gz}; then                                  # (1)
             sed -i 's:/usr/local:/home/linuxbrew/.linuxbrew:g' *.json; # (2)
-            brew test-bot --ci-upload --git-name=touist --git-email=mael.valais@gmail.com --bintray-org=touist --verbose;
+            brew test-bot --ci-upload --git-name=$GITHUB_USER --git-email=mael.valais@gmail.com --bintray-org=$TAP_BOTTLE_ORG --verbose;
           else
             echo "==> No bottle found in the bucket, skipping --ci-upload";
           fi
