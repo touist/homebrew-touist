@@ -11,6 +11,10 @@ To push a new release:
 
     brew bump-formula-pr touist/touist/touist --url=https://github.com/touist/touist/archive/v3.4.4.tar.gz
 
+When the PR is green, pull the PR locally:
+
+    HOMEBREW_BINTRAY_USER=maelvalais HOMEBREW_BINTRAY_KEY=$(security find-generic-password -s bintray-api-key -a maelvalais -w) brew pull --bottle --bintray-org=touist --test-bot-user=touist https://github.com/touist/homebrew-touist/pull/16
+
 To create a new formula:
 
     brew create --tap touist/touist https://github.com/touist/touist/archive/v3.4.4.tar.gz
