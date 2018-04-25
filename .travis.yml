@@ -14,7 +14,7 @@ language: ruby
 if: tag IS blank AND NOT type IN (push)
 env:
   global:
-    - HOMEBREW_BINTRAY_USER=touist
+    - HOMEBREW_BINTRAY_USER=maelvalais
     - TAP_BOTTLE_DOMAIN=https://dl.bintray.com/touist
     - AWS_REGION=eu-west-1 # needed because the aws-sdk-s3 gem errors without it
     - BUCKET=homebrew-touist-travis
@@ -170,7 +170,7 @@ jobs:
         - |
           if ls *.{json,tar.gz}; then                                  # (1)
             sed -i 's:/usr/local:/home/linuxbrew/.linuxbrew:g' *.json; # (2)
-            brew test-bot --ci-upload --git-name=maelvalais --git-email=mael.valais@gmail.com --bintray-org=maelvalais --verbose;
+            brew test-bot --ci-upload --git-name=touist --git-email=mael.valais@gmail.com --bintray-org=touist --verbose;
           else
             echo "==> No bottle found in the bucket, skipping --ci-upload";
           fi
