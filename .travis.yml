@@ -14,7 +14,7 @@ language: ruby
 if: tag IS blank AND NOT type IN (push)
 env:
   global:
-    - HOMEBREW_BINTRAY_USER=maelvalais
+    - HOMEBREW_BINTRAY_USER=touist
     - TAP_BOTTLE_DOMAIN=https://dl.bintray.com/touist
     - AWS_REGION=eu-west-1 # needed because the aws-sdk-s3 gem errors without it
     - BUCKET=homebrew-touist-travis
