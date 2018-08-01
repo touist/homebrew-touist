@@ -3,7 +3,7 @@ class Rareqs < Formula
   homepage "http://sat.inesc-id.pt/~mikolas/sw/areqs/"
   url "http://sat.inesc-id.pt/~mikolas/sw/areqs/rareqs-1.1.src.tgz"
   sha256 "2d58097594e813036be922cb5914e6ba659e4bd424336dc7ed917d6c9191e2a3"
-  revision 1
+  revision 2
 
   bottle do
     root_url "https://dl.bintray.com/touist/bottles-touist"
