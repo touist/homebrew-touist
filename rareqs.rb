@@ -5,6 +5,8 @@ class Rareqs < Formula
   sha256 "2d58097594e813036be922cb5914e6ba659e4bd424336dc7ed917d6c9191e2a3"
   revision 2
 
+  depends_on "zlib" unless OS.mac?
+
   bottle do
     root_url "https://dl.bintray.com/touist/bottles-touist"
     cellar :any_skip_relocation
