@@ -4,7 +4,7 @@ class Qute < Formula
   url "https://github.com/maelvalais/qute/archive/v0.0.1.tar.gz"
   sha256 "488825160ac586df7c0c642fff673731ba82647defa12941acde93bcf503a7d8"
   head "https://github.com/maelvalais/qute.git"
-  revision 3
+  revision 4
 
   bottle do
     root_url "https://dl.bintray.com/touist/bottles-touist"
@@ -17,7 +17,10 @@ class Qute < Formula
   depends_on "boost"
   depends_on "cmake" => :build
 
+  needs :cxx11
+
   def install
+    ENV.cxx11
     system "cmake", ".", *std_cmake_args
     system "make"
     bin.install "qute"
