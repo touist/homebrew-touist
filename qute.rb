@@ -4,7 +4,7 @@ class Qute < Formula
   url "https://github.com/maelvalais/qute/archive/v0.0.1.tar.gz"
   sha256 "488825160ac586df7c0c642fff673731ba82647defa12941acde93bcf503a7d8"
   head "https://github.com/maelvalais/qute.git"
-  revision 4
+  revision 5
 
   bottle do
     root_url "https://dl.bintray.com/touist/bottles-touist"
@@ -34,7 +34,6 @@ class Qute < Formula
       a 1 0
       2 1 0
     EOS
-    assert_equal "SAT", shell_output("#{bin}/qute #{testpath}/test.dimacs", result = 10).strip
+    assert_equal "SAT", shell_output("#{bin}/qute #{testpath}/test.dimacs", 10).strip
   end
 end
-
