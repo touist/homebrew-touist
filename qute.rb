@@ -9,10 +9,10 @@ class Qute < Formula
   bottle do
     root_url "https://dl.bintray.com/touist/bottles-touist"
     cellar :any
-    sha256 "8423a4510102ec43d187cd715006c8995757c175cd2bd3ff824f2dcd2cf4647a" => :high_sierra
-    sha256 "2a412d29940b62f8cb1bc616d27c7cc8ae6f1ddca58ff0f314c0f85d5bf9fb3f" => :sierra
-    sha256 "f30fa63d8f1b99a3324ed799bc764b50890858367314593bdae49d38c11691ea" => :el_capitan
-    sha256 "8ce00ec128c2340ab77c4727400ef241a774111ed5e4735267d8adcb8fcb6960" => :x86_64_linux
+    sha256 "6e11e476e05d9ed38b9b1c45495e884e30e74504454949ddb2b6cc6122f3323a" => :mojave
+    sha256 "6e11e476e05d9ed38b9b1c45495e884e30e74504454949ddb2b6cc6122f3323a" => :high_sierra
+    sha256 "21e5e6a5c0984ce7a4c757c81a80d65312428096f03a8054f7cc77a3e16119c1" => :sierra
+    sha256 "bb91a0f5a84f57afbdb9f491b146557ea0ec838dea8b96dcdb7384115821cbd6" => :x86_64_linux
   end
 
   depends_on "boost"
