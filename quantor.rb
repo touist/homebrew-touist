@@ -1,17 +1,16 @@
 class Quantor < Formula
-  desc "solver for quantified boolean formulas (QBF)"
+  desc "Solver for quantified boolean formulas (QBF)"
   homepage "http://fmv.jku.at/quantor"
   url "http://fmv.jku.at/quantor/quantor-3.2.tar.gz"
   sha256 "7a82ebfd1c8ecc250325f311e725f6263bf69b412edcc2b600db2a25937d1189"
 
   bottle do
     root_url "https://dl.bintray.com/touist/bottles-touist"
-    cellar :any_skip_relocation
     rebuild 1
-    sha256 "e44188a9ccabc1b21a3370891c6bdb2e8927e15f42b6e137d4754f56319f4e84" => :high_sierra
-    sha256 "e44188a9ccabc1b21a3370891c6bdb2e8927e15f42b6e137d4754f56319f4e84" => :sierra
-    sha256 "674f3d0997ab993b65ff058986e46247c39870bc9e22a57a2c0870ae0db828d4" => :el_capitan
-    sha256 "33db76fa3a93976e6068e5fce9a871803da23cac44be4682c078860cb5a0faf8" => :x86_64_linux
+    sha256 cellar: :any_skip_relocation, high_sierra:  "e44188a9ccabc1b21a3370891c6bdb2e8927e15f42b6e137d4754f56319f4e84"
+    sha256 cellar: :any_skip_relocation, sierra:       "e44188a9ccabc1b21a3370891c6bdb2e8927e15f42b6e137d4754f56319f4e84"
+    sha256 cellar: :any_skip_relocation, el_capitan:   "674f3d0997ab993b65ff058986e46247c39870bc9e22a57a2c0870ae0db828d4"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "33db76fa3a93976e6068e5fce9a871803da23cac44be4682c078860cb5a0faf8"
   end
 
   depends_on "picosat" => :build

@@ -9,11 +9,10 @@ class Rareqs < Formula
 
   bottle do
     root_url "https://dl.bintray.com/touist/bottles-touist"
-    cellar :any_skip_relocation
-    sha256 "375fa444a3ac8e3683b5b567894a2a0b61e1730a5cc06a752d79d3df851df3d5" => :high_sierra
-    sha256 "7804af5084f332850b88a31e36270e56f83850aeb3161bc016f5c00abd3944ea" => :sierra
-    sha256 "f3dca2ab4bf93bc567bbe613cfde78d34ae6950f5ca88ea422d2f312e771bfcf" => :el_capitan
-    sha256 "3c7616ff282cb7fd20225add6aac13fe746a3e528d560142b6419b8be530246b" => :x86_64_linux
+    sha256 cellar: :any_skip_relocation, high_sierra:  "375fa444a3ac8e3683b5b567894a2a0b61e1730a5cc06a752d79d3df851df3d5"
+    sha256 cellar: :any_skip_relocation, sierra:       "7804af5084f332850b88a31e36270e56f83850aeb3161bc016f5c00abd3944ea"
+    sha256 cellar: :any_skip_relocation, el_capitan:   "f3dca2ab4bf93bc567bbe613cfde78d34ae6950f5ca88ea422d2f312e771bfcf"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "3c7616ff282cb7fd20225add6aac13fe746a3e528d560142b6419b8be530246b"
   end
 
   patch :DATA
